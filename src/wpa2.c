@@ -1,5 +1,4 @@
-#include <string.h>
-#include "pbkdf2.h"
+#include "wpa2.h"
 
 /*
  * Internally, the PBKDF2 key derivation function employed in WPA2-Personal
@@ -16,53 +15,37 @@
  * SSID.
  */
 
-uint32_t* wpa2(char password[MAX_LENGHT], char salt[MAX_LENGHT])
+void wpa2(wpa2_ctx_t* ctx)
 {
-    uint32_t PMK[8];
-    uint32_t strlen_password, strlen_salt;
-    uint32_t iteration_count = 4096;
-    pbkdf2_ctx_t ctx;
-
-    strlen_password = strlen(password);
-    strlen_salt = strlen(salt);
-
-    ctx.strlen_password = strlen_password;
-    ctx.strlen_salt = strlen_salt;
-
-    ctx.iteration_count = iteration_count;
-    strncpy(ctx.password, password, ctx.strlen_password);
-    strncpy(ctx.salt, salt, ctx.strlen_salt);
-
     /* Iterazione 1 */
     pbkdf2_ctx_init(&ctx);
 
-    hmac_append_str_key(&ctx.hmac_ctx, ctx.password, ctx.strlen_password);
-    hmac_append_str_text(&ctx.hmac_ctx, ctx.salt, ctx.strlen_salt);
-    hmac_append_int_text(&ctx.hmac_ctx, 1);
+    hmac_append_str_key(&ctx->pbkdf2_ctx.hmac_ctx, ctx->pbkdf2_ctx.password, ctx->pbkdf2_ctx.strlen_password);
+    hmac_append_str_text(&ctx->pbkdf2_ctx.hmac_ctx, ctx->pbkdf2_ctx.salt, ctx->pbkdf2_ctx.strlen_salt);
+    hmac_append_int_text(&ctx->pbkdf2_ctx.hmac_ctx, 1);
 
     pbkdf2(&ctx);
 
     pbkdf2_ctx_dispose(&ctx);
 
-    PMK[0] = ctx.T[0];
-    PMK[1] = ctx.T[1];
-    PMK[2] = ctx.T[2];
-    PMK[3] = ctx.T[3];
-    PMK[4] = ctx.T[4];
+    ctx->PMK[0] = ctx->pbkdf2_ctx.T[0];
+    ctx->PMK[1] = ctx->pbkdf2_ctx.T[1];
+    ctx->PMK[2] = ctx->pbkdf2_ctx.T[2];
+    ctx->PMK[3] = ctx->pbkdf2_ctx.T[3];
+    ctx->PMK[4] = ctx->pbkdf2_ctx.T[4];
 
     /* Iterazione 2 */
     pbkdf2_ctx_init(&ctx);
 
-    hmac_append_str_key(&ctx.hmac_ctx, ctx.password, ctx.strlen_password);
-    hmac_append_str_text(&ctx.hmac_ctx, ctx.salt, ctx.strlen_salt);
-    hmac_append_int_text(&ctx.hmac_ctx, 2);
+    hmac_append_str_key(&ctx->pbkdf2_ctx.hmac_ctx, ctx->pbkdf2_ctx.password, ctx->pbkdf2_ctx.strlen_password);
+    hmac_append_str_text(&ctx->pbkdf2_ctx.hmac_ctx, ctx->pbkdf2_ctx.salt, ctx->pbkdf2_ctx.strlen_salt);
+    hmac_append_int_text(&ctx->pbkdf2_ctx.hmac_ctx, 2);
 
     pbkdf2(&ctx);
 
     pbkdf2_ctx_dispose(&ctx);
 
-    PMK[5] = ctx.T[0];
-    PMK[6] = ctx.T[1];
-    PMK[7] = ctx.T[2];
-    return PMK;
+    ctx->PMK[5] = ctx->pbkdf2_ctx.T[0];
+    ctx->PMK[6] = ctx->pbkdf2_ctx.T[1];
+    ctx->PMK[7] = ctx->pbkdf2_ctx.T[2];
 }
