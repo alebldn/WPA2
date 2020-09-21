@@ -10,11 +10,14 @@
 
 #include "hmac.h"
 
+#define MAX_LENGHT          64
+
+
 typedef struct
 {
 	hmac_ctx_t hmac_ctx;
-	char* password;
-	char* salt;
+	char password[MAX_LENGHT];
+	char salt[MAX_LENGHT];
 	uint32_t strlen_password;
 	uint32_t strlen_salt;
 	uint64_t iteration_count;
@@ -22,6 +25,8 @@ typedef struct
 
 } pbkdf2_ctx_t;
 
+void pbkdf2_ctx_init(pbkdf2_ctx_t* ctx);
 void pbkdf2(pbkdf2_ctx_t* ctx);
+void pbkdf2_ctx_dispose(pbkdf2_ctx_t* ctx);
 
 #endif /* PBKDF2_H */
