@@ -42,7 +42,6 @@ void wpa2(wpa2_ctx_t* ctx)
 
     pbkdf2_append_str_password(&ctx->pbkdf2_ctx, ctx->pbkdf2_ctx.password, ctx->pbkdf2_ctx.strlen_password);
     pbkdf2_append_str_salt(&ctx->pbkdf2_ctx, ctx->pbkdf2_ctx.salt, ctx->pbkdf2_ctx.strlen_salt);
-    pbkdf2_append_int_salt(&ctx->pbkdf2_ctx, 1);
 
     pbkdf2(&ctx->pbkdf2_ctx);
 
@@ -59,7 +58,6 @@ void wpa2(wpa2_ctx_t* ctx)
 
     pbkdf2_append_str_password(&ctx->pbkdf2_ctx, ctx->pbkdf2_ctx.password, ctx->pbkdf2_ctx.strlen_password);
     pbkdf2_append_str_salt(&ctx->pbkdf2_ctx, ctx->pbkdf2_ctx.salt, ctx->pbkdf2_ctx.strlen_salt);
-    pbkdf2_append_int_salt(&ctx->pbkdf2_ctx, 2);
 
     pbkdf2(&ctx->pbkdf2_ctx);
 

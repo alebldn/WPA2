@@ -74,7 +74,6 @@ Input:
 /*
  * int main(int argc, char** argv)
 {
-    uint32_t PMK[8];
     char salt[MAX_LENGHT] = "salt";
     char password[MAX_LENGHT] = "password";
 
