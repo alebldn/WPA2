@@ -1,5 +1,25 @@
 #include "pbkdf2.h"
 
+void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
+{
+    hmac_append_str_key(&ctx->hmac_ctx, value, strlen);
+}
+
+void pbkdf2_append_int_password(pbkdf2_ctx_t* ctx, uint64_t value)
+{
+    hmac_append_int_key(&ctx->hmac_ctx, value);
+}
+
+void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
+{
+    hmac_append_str_text(&ctx->hmac_ctx, value, strlen);
+}
+
+void pbkdf2_append_int_salt(pbkdf2_ctx_t* ctx, uint64_t value)
+{
+    hmac_append_int_text(&ctx->hmac_ctx, value);
+}
+
 void pbkdf2_ctx_init(pbkdf2_ctx_t* ctx)
 {
     hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32 + BITS_IN_CHUNK);

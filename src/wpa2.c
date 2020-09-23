@@ -15,26 +15,6 @@
  * SSID.
  */
 
-void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
-{
-    hmac_append_str_key(&ctx->hmac_ctx, value, strlen);
-}
-
-void pbkdf2_append_int_password(pbkdf2_ctx_t* ctx, uint64_t value)
-{
-    hmac_append_int_key(&ctx->hmac_ctx, value);
-}
-
-void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
-{
-    hmac_append_str_text(&ctx->hmac_ctx, value, strlen);
-}
-
-void pbkdf2_append_int_salt(pbkdf2_ctx_t* ctx, uint64_t value)
-{
-    hmac_append_int_text(&ctx->hmac_ctx, value);
-}
-
 void wpa2(wpa2_ctx_t* ctx)
 {
     /* Iterazione 1 */
