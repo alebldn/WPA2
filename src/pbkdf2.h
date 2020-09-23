@@ -21,8 +21,8 @@ typedef struct
 	uint32_t strlen_password;
 	uint32_t strlen_salt;
 	uint64_t iteration_count;
-	uint32_t T[WORDS_IN_HASH];
-
+	uint32_t* T;
+    uint32_t bits_in_result_hash;
 } pbkdf2_ctx_t;
 
 void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen);

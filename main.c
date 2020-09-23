@@ -68,6 +68,7 @@ int main(int argc, char** argv)
     ctx.pbkdf2_ctx.strlen_password = strlen_password;
     ctx.pbkdf2_ctx.strlen_salt = strlen_salt;
     ctx.pbkdf2_ctx.iteration_count = iteration_count;
+    ctx.pbkdf2_ctx.bits_in_result_hash = 256;
 
     wpa2(&ctx);
 
