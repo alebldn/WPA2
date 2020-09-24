@@ -28,7 +28,7 @@ void pbkdf2_ctx_init(pbkdf2_ctx_t* ctx)
 void pbkdf2(pbkdf2_ctx_t* ctx)
 {
 	uint64_t i, j, index, mk_index;
-	uint64_t len, words;
+	uint64_t len;
 
 	if((ctx->bits_in_result_hash & (BITS_IN_WORD - 1)) != 0)
     {
@@ -37,17 +37,21 @@ void pbkdf2(pbkdf2_ctx_t* ctx)
     }
 
     len = (ctx->bits_in_result_hash + BITS_IN_HASH - 1)/BITS_IN_HASH;
-	words = ctx->bits_in_result_hash / BITS_IN_WORD;
+	ctx->words_in_T = ctx->bits_in_result_hash / BITS_IN_WORD;
 
-	ctx->T = (uint32_t*) malloc(words * sizeof(uint32_t));
+	ctx->T = (uint32_t*) malloc(ctx->words_in_T * sizeof(uint32_t));
 
-	for(index = 0; index < words; index++)
+	for(index = 0; index < ctx->words_in_T; index++)
     {
 	    ctx->T[index] = 0;
     }
 
 	for(i = 1; i <= len; i++) {
 
+	    hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32);
+
+        hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
+        hmac_append_str_text(&ctx->hmac_ctx, ctx->salt, ctx->strlen_salt);
         hmac_append_int_text(&ctx->hmac_ctx, i);
 
         for (j = 1; j <= ctx->iteration_count; j++) {
@@ -61,10 +65,11 @@ void pbkdf2(pbkdf2_ctx_t* ctx)
             for(index = 0; index < WORDS_IN_HASH; index++)
             {
                 mk_index = (i - 1) * WORDS_IN_HASH + index;
-                if(mk_index < words)
+                if(mk_index >= ctx->words_in_T)
                 {
-                    ctx->T[mk_index] ^= ctx->hmac_ctx.digest[index];
+                    break;
                 }
+                ctx->T[mk_index] ^= ctx->hmac_ctx.digest[index];
             }
 
             hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[0]);
@@ -75,13 +80,13 @@ void pbkdf2(pbkdf2_ctx_t* ctx)
             hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
 
         }
+
+        hmac_ctx_dispose(&ctx->hmac_ctx);
     }
 }
 
 void pbkdf2_ctx_dispose(pbkdf2_ctx_t* ctx)
 {
-    hmac_ctx_dispose(&ctx->hmac_ctx);
-
     free(ctx->T);
 }
 

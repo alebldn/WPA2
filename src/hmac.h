@@ -28,7 +28,7 @@ void hmac_append_long_key(hmac_ctx_t* ctx, uint64_t value);
 void hmac_append_long_text(hmac_ctx_t* ctx, uint64_t value);
 
 
-void hmac_ctx_init(hmac_ctx_t* ctx, uint64_t bytes_to_be_written_in_key, uint64_t bytes_to_be_written_in_text);
+void hmac_ctx_init(hmac_ctx_t* ctx, uint64_t bits_to_be_written_in_key, uint64_t bits_to_be_written_in_text);
 void hmac_ctx_dispose(hmac_ctx_t* ctx);
 void hmac(hmac_ctx_t* ctx);
 

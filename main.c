@@ -1,4 +1,4 @@
-#include "src/wpa2.h"
+#include "src/pbkdf2.h"
 #include <string.h>
 
 /*
@@ -24,19 +24,33 @@ The Group Temporal Key (32 bytes) is divided into three separate keys:
 -   8 bytes of Michael MIC Authenticator Tx Key – used to compute MIC on Multicast and Broadcast packets transmitted by AP
 -   8 bytes of Michael MIC Authenticator Rx Key – currently unused as stations do not send multicast traffic
  */
-/*
- * TODO:
- *      - Generalizzare PBKDF2 in maniera che iteri sulla lunghezza dell'hash di output (aggiungere quindi il ciclo esterno con i)
- *      - PMK = PBKDF2(HMAC−SHA1, PSK, SSID, 4096, 256)
- *                      HASH-ALG, PSW, SALT, N_ITER, HASH_LEN
- *
- * Dannati stronzi che hanno scritto quel pdf. chiaro pari a z e r o
- *
- */
+char* min(char* A, char* S, int strlen)
+{
+    for(int i = 0; i < strlen; i++)
+    {
+        if(A[i] < S[i])
+            return A;
+        else if(A[i] > S[i])
+            return S;
+    }
+    return NULL;
+}
+
+char* max(char* A, char* S, int strlen)
+{
+    for(int i = 0; i < strlen; i++)
+    {
+        if(A[i] > S[i])
+            return A;
+        else if(A[i] < S[i])
+            return S;
+    }
+    return NULL;
+}
 
 int main(int argc, char** argv)
 {
-    wpa2_ctx_t ctx;
+    pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
@@ -44,45 +58,76 @@ int main(int argc, char** argv)
     char password[MAX_LENGHT] = "passwordtest";
     char salt[MAX_LENGHT] = "Jarvis";
 
-    unsigned char AMAC[] = {0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75};
-    unsigned char SMAC[] = {0xc0, 0xee, 0xfb, 0xd3, 0x4c, 0xfa};
-    unsigned char SNonce[] = {  0x84, 0x9d, 0x85, 0xc1, 0x3f, 0x55, 0x09, 0x87,
+    char AMAC[] =   {   0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75                      };
+    char SMAC[] =   {   0xc0, 0xee, 0xfb, 0xd3, 0x4c, 0xfa                      };
+    char SNonce[] = {   0x84, 0x9d, 0x85, 0xc1, 0x3f, 0x55, 0x09, 0x87,
                                 0xfa, 0x55, 0x03, 0xbd, 0x41, 0x04, 0xc6, 0xdb,
                                 0xc6, 0x4d, 0xcd, 0xc6, 0x04, 0xc0, 0xbb, 0x42,
-                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c};
-    unsigned char ANonce[] = {  0xf9, 0x3c, 0x42, 0xf1, 0xff, 0x5a, 0x3e, 0x0b,
+                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c  };
+    char ANonce[] = {  0xf9, 0x3c, 0x42, 0xf1, 0xff, 0x5a, 0x3e, 0x0b,
                                 0x92, 0x1c, 0xf0, 0x29, 0x8f, 0xe0, 0x07, 0xe7,
                                 0xba, 0xa3, 0xf6, 0x5c, 0x62, 0x5b, 0x3d, 0xff,
-                                0xb3, 0xb9, 0x32, 0x12, 0xad, 0x8c, 0x78, 0xb2};
+                                0xb3, 0xb9, 0x32, 0x12, 0xad, 0x8c, 0x78, 0xb2  };
     // AP MAC {0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75}
 
     strlen_password = strlen(password);
     strlen_salt = strlen(salt);
 
-    memset(ctx.pbkdf2_ctx.password, 0, MAX_LENGHT);
-    memset(ctx.pbkdf2_ctx.salt, 0, MAX_LENGHT);
+    memset(ctx.password, 0, MAX_LENGHT);
+    memset(ctx.salt, 0, MAX_LENGHT);
 
-    strncpy(ctx.pbkdf2_ctx.password, password, strlen_password);
-    strncpy(ctx.pbkdf2_ctx.salt, salt, strlen_salt);
+    strncpy(ctx.password, password, strlen_password);
+    strncpy(ctx.salt, salt, strlen_salt);
 
-    ctx.pbkdf2_ctx.strlen_password = strlen_password;
-    ctx.pbkdf2_ctx.strlen_salt = strlen_salt;
-    ctx.pbkdf2_ctx.iteration_count = iteration_count;
-    ctx.pbkdf2_ctx.bits_in_result_hash = 256;
+    ctx.strlen_password = strlen_password;
+    ctx.strlen_salt = strlen_salt;
+    ctx.iteration_count = iteration_count;
+    ctx.bits_in_result_hash = 256;
 
-    wpa2(&ctx);
+    pbkdf2_ctx_init(&ctx);
 
-    hmac_ctx_init(&hmac_ctx, 128, 0);
+    pbkdf2(&ctx);
 
-    hmac_append_int_key(&hmac_ctx, ctx.PMK[0]);
-    hmac_append_int_key(&hmac_ctx, ctx.PMK[1]);
-    hmac_append_int_key(&hmac_ctx, ctx.PMK[2]);
-    hmac_append_int_key(&hmac_ctx, ctx.PMK[3]);
+    printf("+---------------------------------- PMK ----------------------------------+\n");
+    printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.T[0], ctx.T[1], ctx.T[2],
+                ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
+    printf("+-------------------------------------------------------------------------+\n\n");
+
+    /*
+     * È necessario scrivere "Pairwise key expansion\0", min(AMAC, SMAC), max(AMAC, SMAC),
+     * min(ANonce, Snonce), max(ANonce, Snonce), '\0'
+     *
+     * Quindi i byte totali da scrivere sono 22 + 1 + 6 + 6 + 32 + 32 + 1 = 100 byte.
+     * Mentre il numero di bit è 100 * 8 = 800.
+     */
+    hmac_ctx_init(&hmac_ctx, 256, 800);
+
+    hmac_append_int_key(&hmac_ctx, ctx.T[0]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[1]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[2]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[3]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[4]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[5]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[6]);
+    hmac_append_int_key(&hmac_ctx, ctx.T[7]);
+
+    hmac_append_str_text(&hmac_ctx, "Pairwise key expansion", 22);
+    hmac_append_char_text(&hmac_ctx, 0x00);
+    hmac_append_str_text(&hmac_ctx, min(AMAC, SMAC, 6), 6);
+    hmac_append_str_text(&hmac_ctx, max(AMAC, SMAC, 6), 6);
+    hmac_append_str_text(&hmac_ctx, min(ANonce, SNonce, 32), 32);
+    hmac_append_str_text(&hmac_ctx, max(ANonce, SNonce, 32), 32);
+    hmac_append_char_text(&hmac_ctx, 0x00);
 
     hmac(&hmac_ctx);
 
-    hmac_ctx_dispose(&hmac_ctx);
+    printf("+---------------------------------- KCK ----------------------------------+\n");
+    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+    printf("+-------------------------------------------------------------------------+\n");
 
+    hmac_ctx_dispose(&hmac_ctx);
+    pbkdf2_ctx_dispose(&ctx);
+/*
     printf("+---------------------------------- PMK ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.PMK[0], ctx.PMK[1], ctx.PMK[2], ctx.PMK[3], ctx.PMK[4], ctx.PMK[5], ctx.PMK[6], ctx.PMK[7]);
     printf("+---------------------------------- PTK ----------------------------------+\n");
@@ -90,5 +135,5 @@ int main(int argc, char** argv)
     printf("+---------------------------------- MIC ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
     printf("+-------------------------------------------------------------------------+\n");
-
+*/
 }

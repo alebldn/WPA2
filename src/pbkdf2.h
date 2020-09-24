@@ -22,6 +22,7 @@ typedef struct
 	uint32_t strlen_salt;
 	uint64_t iteration_count;
 	uint32_t* T;
+	uint32_t words_in_T;
     uint32_t bits_in_result_hash;
 } pbkdf2_ctx_t;
 
