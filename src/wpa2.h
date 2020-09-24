@@ -10,6 +10,10 @@ typedef struct {
     uint32_t PMK[WORDS_IN_PMK];
 } wpa2_ctx_t;
 
+;
+
+
 void wpa2(wpa2_ctx_t* ctx);
+
 
 #endif //WPA2_WPA2_H
