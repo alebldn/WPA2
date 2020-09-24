@@ -18,10 +18,10 @@ typedef struct
 
 void hmac_append_bit_key(hmac_ctx_t* ctx, bit_t value);
 void hmac_append_bit_text(hmac_ctx_t* ctx, bit_t value);
-void hmac_append_char_key(hmac_ctx_t* ctx, char value);
-void hmac_append_char_text(hmac_ctx_t* ctx, char value);
-void hmac_append_str_key(hmac_ctx_t* ctx, char* value, uint64_t strlen);
-void hmac_append_str_text(hmac_ctx_t* ctx, char* value, uint64_t strlen);
+void hmac_append_char_key(hmac_ctx_t* ctx, unsigned char value);
+void hmac_append_char_text(hmac_ctx_t* ctx, unsigned char value);
+void hmac_append_str_key(hmac_ctx_t* ctx, unsigned char* value, uint64_t strlen);
+void hmac_append_str_text(hmac_ctx_t* ctx, unsigned char* value, uint64_t strlen);
 void hmac_append_int_key(hmac_ctx_t* ctx, uint32_t value);
 void hmac_append_int_text(hmac_ctx_t* ctx, uint32_t value);
 void hmac_append_long_key(hmac_ctx_t* ctx, uint64_t value);

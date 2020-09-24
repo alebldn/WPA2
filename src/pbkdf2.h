@@ -16,8 +16,8 @@
 typedef struct
 {
 	hmac_ctx_t hmac_ctx;
-	char password[MAX_LENGHT];
-	char salt[MAX_LENGHT];
+    unsigned char password[MAX_LENGHT];
+    unsigned char salt[MAX_LENGHT];
 	uint32_t strlen_password;
 	uint32_t strlen_salt;
 	uint64_t iteration_count;
@@ -26,9 +26,9 @@ typedef struct
     uint32_t bits_in_result_hash;
 } pbkdf2_ctx_t;
 
-void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen);
+void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, unsigned char* value, uint64_t strlen);
 void pbkdf2_append_int_password(pbkdf2_ctx_t* ctx, uint64_t value);
-void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen);
+void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, unsigned char* value, uint64_t strlen);
 void pbkdf2_append_int_salt(pbkdf2_ctx_t* ctx, uint64_t value);
 
 void pbkdf2_ctx_init(pbkdf2_ctx_t* ctx);

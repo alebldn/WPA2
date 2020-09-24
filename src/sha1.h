@@ -39,10 +39,10 @@ typedef struct
 } sha1_ctx_t;
 
 void sha1_append_bit(sha1_ctx_t* ctx, bit_t bit);
-void sha1_append_char(sha1_ctx_t* ctx, char value);
+void sha1_append_char(sha1_ctx_t* ctx, unsigned char value);
 void sha1_append_int(sha1_ctx_t* ctx, uint32_t value);
 void sha1_append_long(sha1_ctx_t* ctx, uint64_t value);
-void sha1_append_str(sha1_ctx_t* ctx, char* str, uint64_t strlen);
+void sha1_append_str(sha1_ctx_t* ctx, unsigned char* str, uint64_t strlen);
 uint32_t rotate_left(uint32_t value, int32_t shift);
 uint32_t rotate_right(uint32_t value, int32_t shift);
 

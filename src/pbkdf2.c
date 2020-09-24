@@ -1,6 +1,6 @@
 #include "pbkdf2.h"
 
-void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
+void pbkdf2_append_str_password(pbkdf2_ctx_t* ctx, unsigned char* value, uint64_t strlen)
 {
     hmac_append_str_key(&ctx->hmac_ctx, value, strlen);
 }
@@ -10,7 +10,7 @@ void pbkdf2_append_int_password(pbkdf2_ctx_t* ctx, uint64_t value)
     hmac_append_int_key(&ctx->hmac_ctx, value);
 }
 
-void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, char* value, uint64_t strlen)
+void pbkdf2_append_str_salt(pbkdf2_ctx_t* ctx, unsigned char* value, uint64_t strlen)
 {
     hmac_append_str_text(&ctx->hmac_ctx, value, strlen);
 }
@@ -30,7 +30,7 @@ void pbkdf2(pbkdf2_ctx_t* ctx)
 	uint64_t i, j, index, mk_index;
 	uint64_t len;
 
-	if((ctx->bits_in_result_hash & (BITS_IN_WORD - 1)) != 0)
+	if((ctx->bits_in_result_hash & BITS_IN_WORD - 1) != 0)
     {
 	    fprintf(stderr, "Bits in result hash is not a multiple of 32 (%d)\n", ctx->bits_in_result_hash);
 	    exit(-1);

@@ -10,22 +10,22 @@ void hmac_append_bit_text(hmac_ctx_t* ctx, bit_t value)
     sha1_append_bit(&ctx->sha1_ctx_text, value);
 }
 
-void hmac_append_char_key(hmac_ctx_t* ctx, char value)
+void hmac_append_char_key(hmac_ctx_t* ctx, unsigned char value)
 {
     sha1_append_char(&ctx->sha1_ctx_key, value);
 }
 
-void hmac_append_char_text(hmac_ctx_t* ctx, char value)
+void hmac_append_char_text(hmac_ctx_t* ctx, unsigned char value)
 {
     sha1_append_char(&ctx->sha1_ctx_text, value);
 }
 
-void hmac_append_str_key(hmac_ctx_t* ctx, char* value, uint64_t strlen)
+void hmac_append_str_key(hmac_ctx_t* ctx, unsigned char* value, uint64_t strlen)
 {
     sha1_append_str(&ctx->sha1_ctx_key, value, strlen);
 }
 
-void hmac_append_str_text(hmac_ctx_t* ctx, char* value, uint64_t strlen)
+void hmac_append_str_text(hmac_ctx_t* ctx, unsigned char* value, uint64_t strlen)
 {
     sha1_append_str(&ctx->sha1_ctx_text, value, strlen);
 }

@@ -29,7 +29,7 @@ void sha1_append_bit(sha1_ctx_t* ctx, bit_t bit)
     }
 }
 
-void sha1_append_char(sha1_ctx_t* ctx, char value)
+void sha1_append_char(sha1_ctx_t* ctx, unsigned char value)
 {
     for(int8_t i = 7; i >= 0; i--)
     {
@@ -37,7 +37,7 @@ void sha1_append_char(sha1_ctx_t* ctx, char value)
     }
 }
 
-void sha1_append_str(sha1_ctx_t* ctx, char* str, uint64_t strlen)
+void sha1_append_str(sha1_ctx_t* ctx, unsigned char* str, uint64_t strlen)
 {
     for(uint64_t i = 0; i < strlen; i++)
     {
