@@ -1,5 +1,7 @@
 #include "src/pbkdf2.h"
+#include "cap2hccapx/cap2hccapx.h"
 #include <string.h>
+
 
 /*
 4 WAY HANDSHAKE:
@@ -48,21 +50,42 @@ unsigned char* max(unsigned char* A, unsigned char* S, int strlen)
     return A;
 }
 
+//    unsigned char AMAC[] =   {  0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75                      };
+//
+//    unsigned char SMAC[] =   {  0xc0, 0xee, 0xfb, 0xd3, 0x4c, 0xfa                      };
+//
+//    unsigned char ANonce[] = {  0xf9, 0x3c, 0x42, 0xf1, 0xff, 0x5a, 0x3e, 0x0b,
+//                                0x92, 0x1c, 0xf0, 0x29, 0x8f, 0xe0, 0x07, 0xe7,
+//                                0xba, 0xa3, 0xf6, 0x5c, 0x62, 0x5b, 0x3d, 0xff,
+//                                0xb3, 0xb9, 0x32, 0x12, 0xad, 0x8c, 0x78, 0xb2          };
+//
+//    unsigned char SNonce[] = {  0x84, 0x9d, 0x85, 0xc1, 0x3f, 0x55, 0x09, 0x87,
+//                                0xfa, 0x55, 0x03, 0xbd, 0x41, 0x04, 0xc6, 0xdb,
+//                                0xc6, 0x4d, 0xcd, 0xc6, 0x04, 0xc0, 0xbb, 0x42,
+//                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c          };
+
+
 int main(int argc, char** argv)
 {
-    unsigned char AMAC[] =   {  0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75                      };
+    /* TODO: inserire gli argomenti (file.cap) (wordlist) */
+    hccapx_t hccapx;
+    FILE* fp = fopen("C:\\Users\\Delta\\CLionProjects\\cap_parser\\Jarvis.hccapx", "rb");
+    if(fp == NULL)
+    {
+        perror("Error in opening input file, exiting.\n");
+        exit(-1);
+    }
 
-    unsigned char SMAC[] =   {  0xc0, 0xee, 0xfb, 0xd3, 0x4c, 0xfa                      };
 
-    unsigned char ANonce[] = {  0xf9, 0x3c, 0x42, 0xf1, 0xff, 0x5a, 0x3e, 0x0b,
-                                0x92, 0x1c, 0xf0, 0x29, 0x8f, 0xe0, 0x07, 0xe7,
-                                0xba, 0xa3, 0xf6, 0x5c, 0x62, 0x5b, 0x3d, 0xff,
-                                0xb3, 0xb9, 0x32, 0x12, 0xad, 0x8c, 0x78, 0xb2          };
 
-    unsigned char SNonce[] = {  0x84, 0x9d, 0x85, 0xc1, 0x3f, 0x55, 0x09, 0x87,
-                                0xfa, 0x55, 0x03, 0xbd, 0x41, 0x04, 0xc6, 0xdb,
-                                0xc6, 0x4d, 0xcd, 0xc6, 0x04, 0xc0, 0xbb, 0x42,
-                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c          };
+    memset(&hccapx, 0, sizeof(hccapx_t));
+
+    /* TODO: Legge sempre e solo la prima struttura hccapx_t, nel caso in cui fossero di più, bisogna verificare e iterare */
+    fread(&hccapx, sizeof(hccapx_t), 1, fp);
+
+    free(fp);
+
+
 
     pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
@@ -92,7 +115,7 @@ int main(int argc, char** argv)
     printf("+---------------------------------- PMK ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.T[0], ctx.T[1], ctx.T[2],
                 ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
-    printf("+-------------------------------------------------------------------------+\n\n");
+    printf("+-------------------------------------------------------------------------+\n");
 
     /*
      * È necessario scrivere "Pairwise key expansion\0", min(AMAC, SMAC), max(AMAC, SMAC),
@@ -101,7 +124,7 @@ int main(int argc, char** argv)
      * Quindi i byte totali da scrivere sono 22 + 1 + 6 + 6 + 32 + 32 + 1 = 100 byte.
      * Mentre il numero di bit è 100 * 8 = 800.
      */
-    hmac_ctx_init(&hmac_ctx, 128, 800);
+    hmac_ctx_init(&hmac_ctx, 256, 800);
 
     hmac_append_int_key(&hmac_ctx, ctx.T[0]);
     hmac_append_int_key(&hmac_ctx, ctx.T[1]);
@@ -114,10 +137,10 @@ int main(int argc, char** argv)
 
     hmac_append_str_text(&hmac_ctx, (unsigned char*) "Pairwise key expansion", 22);
     hmac_append_char_text(&hmac_ctx, 0x00);
-    hmac_append_str_text(&hmac_ctx, min(AMAC, SMAC, 6), 6);
-    hmac_append_str_text(&hmac_ctx, max(AMAC, SMAC, 6), 6);
-    hmac_append_str_text(&hmac_ctx, min(ANonce, SNonce, 32), 32);
-    hmac_append_str_text(&hmac_ctx, max(ANonce, SNonce, 32), 32);
+    hmac_append_str_text(&hmac_ctx, min(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
+    hmac_append_str_text(&hmac_ctx, max(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
+    hmac_append_str_text(&hmac_ctx, min(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
+    hmac_append_str_text(&hmac_ctx, max(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
     hmac_append_char_text(&hmac_ctx, 0x00);
 
     hmac(&hmac_ctx);
@@ -126,8 +149,29 @@ int main(int argc, char** argv)
     printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
     printf("+-------------------------------------------------------------------------+\n");
 
-    hmac_ctx_dispose(&hmac_ctx);
     pbkdf2_ctx_dispose(&ctx);
+
+    hmac_ctx_dispose(&hmac_ctx);
+
+    hmac_ctx_init(&hmac_ctx, 128, hccapx.eapol_len * 8);
+
+    hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[0]);
+    hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[1]);
+    hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[2]);
+    hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[3]);
+
+    hmac_append_str_text(&hmac_ctx, hccapx.eapol, hccapx.eapol_len);
+
+    hmac(&hmac_ctx);
+
+    // 402a7cff 1ab41483 66030581 1c269cf2
+
+    printf("+---------------------------------- MIC ----------------------------------+\n");
+    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+    printf("+-------------------------------------------------------------------------+\n");
+
+    hmac_ctx_dispose(&hmac_ctx);
+
 /*
     printf("+---------------------------------- PMK ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.PMK[0], ctx.PMK[1], ctx.PMK[2], ctx.PMK[3], ctx.PMK[4], ctx.PMK[5], ctx.PMK[6], ctx.PMK[7]);
