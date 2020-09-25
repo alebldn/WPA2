@@ -240,7 +240,7 @@ void hmac(hmac_ctx_t* ctx)
     sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[14]);
     sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[15]);
 
-    ctx->sha1_ctx_text.num_of_chunks = bits_written_in_text / BITS_IN_CHUNK + 1;
+    ctx->sha1_ctx_text.num_of_chunks = (bits_written_in_text + 64) / BITS_IN_CHUNK + 1;
     ctx->sha1_ctx_text.counter = temp_counter;
     ctx->sha1_ctx_text.word_counter = temp_word_counter;
     ctx->sha1_ctx_text.chunk_counter = temp_chunk_counter;

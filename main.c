@@ -69,13 +69,12 @@ int main(int argc, char** argv)
 {
     /* TODO: inserire gli argomenti (file.cap) (wordlist) */
     hccapx_t hccapx;
-    FILE* fp = fopen("C:\\Users\\Delta\\CLionProjects\\cap_parser\\Jarvis.hccapx", "rb");
+    FILE* fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
     if(fp == NULL)
     {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
     }
-
 
 
     memset(&hccapx, 0, sizeof(hccapx_t));
@@ -85,15 +84,15 @@ int main(int argc, char** argv)
 
     free(fp);
 
-
-
     pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
     unsigned char password[MAX_LENGHT] = "passwordtest";
-    unsigned char salt[MAX_LENGHT] = "Jarvis";
+    unsigned char salt[MAX_ESSID_LENGTH];
 
+
+    memcpy(salt, hccapx.essid, MAX_ESSID_LENGTH);
     strlen_password = strlen((char*) password);
     strlen_salt = strlen((char*)salt);
 
