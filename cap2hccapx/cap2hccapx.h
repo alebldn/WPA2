@@ -1,5 +1,5 @@
-#ifndef WPA2_CAP2HCCAPX
-#define WPA2_CAP2HCCAPX
+#ifndef WPA2_CAP2HCCAPX_H
+#define WPA2_CAP2HCCAPX_H
 
 #include <stdint.h>
 
@@ -25,4 +25,4 @@ struct hccapx
 
 typedef struct hccapx hccapx_t;
 
-#endif //WPA2_CAP2HCCAPX
+#endif /* WPA2_CAP2HCCAPX_H */
