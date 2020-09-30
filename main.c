@@ -20,12 +20,8 @@ The Pairwise Transient Key (64 bytes) is divided into five separate keys:
 -   16 bytes of Temporal Key (TK) – Used to encrypt/decrypt Unicast data packets
 -   8 bytes of Michael MIC Authenticator Tx Key – Used to compute MIC on unicast data packets transmitted by the AP
 -   8 bytes of Michael MIC Authenticator Rx Key – Used to compute MIC on unicast data packets transmitted by the station
-
-The Group Temporal Key (32 bytes) is divided into three separate keys:
--   16 bytes of Group Temporal Encryption Key – used to encrypt/decrypt Multicast and Broadcast data packets
--   8 bytes of Michael MIC Authenticator Tx Key – used to compute MIC on Multicast and Broadcast packets transmitted by AP
--   8 bytes of Michael MIC Authenticator Rx Key – currently unused as stations do not send multicast traffic
  */
+
 unsigned char *min(unsigned char *A, unsigned char *S, int strlen) {
     for (int i = 0; i < strlen; i++) {
         if (A[i] < S[i])
@@ -46,25 +42,10 @@ unsigned char *max(unsigned char *A, unsigned char *S, int strlen) {
     return A;
 }
 
-//    unsigned char AMAC[] =   {  0xf4, 0xf5, 0x24, 0xd8, 0x79, 0x75                      };
-//
-//    unsigned char SMAC[] =   {  0xc0, 0xee, 0xfb, 0xd3, 0x4c, 0xfa                      };
-//
-//    unsigned char ANonce[] = {  0xf9, 0x3c, 0x42, 0xf1, 0xff, 0x5a, 0x3e, 0x0b,
-//                                0x92, 0x1c, 0xf0, 0x29, 0x8f, 0xe0, 0x07, 0xe7,
-//                                0xba, 0xa3, 0xf6, 0x5c, 0x62, 0x5b, 0x3d, 0xff,
-//                                0xb3, 0xb9, 0x32, 0x12, 0xad, 0x8c, 0x78, 0xb2          };
-//
-//    unsigned char SNonce[] = {  0x84, 0x9d, 0x85, 0xc1, 0x3f, 0x55, 0x09, 0x87,
-//                                0xfa, 0x55, 0x03, 0xbd, 0x41, 0x04, 0xc6, 0xdb,
-//                                0xc6, 0x4d, 0xcd, 0xc6, 0x04, 0xc0, 0xbb, 0x42,
-//                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c          };
-
-
 int main(int argc, char **argv) {
     /* TODO: inserire gli argomenti (file.cap) (wordlist) */
     hccapx_t hccapx;
-    FILE *fp = fopen("C:\\Users\\Delta\\CLionProjects\\cap_parser\\Jarvis.hccapx", "rb");
+    FILE *fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
     if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
@@ -78,7 +59,6 @@ int main(int argc, char **argv) {
 
     free(fp);
 
-
     pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
@@ -87,13 +67,13 @@ int main(int argc, char **argv) {
     unsigned char salt[MAX_LENGHT] = "Jarvis";
 
     strlen_password = strlen((char *) password);
-    strlen_salt = strlen((char *) salt);
+    strlen_salt = strlen((char *) hccapx.essid);
 
     memset(ctx.password, 0, MAX_LENGHT);
     memset(ctx.salt, 0, MAX_LENGHT);
 
     strncpy((char *) ctx.password, (char *) password, strlen_password);
-    strncpy((char *) ctx.salt, (char *) salt, strlen_salt);
+    strncpy((char *) ctx.salt, (char *) hccapx.essid, strlen_salt);
 
     ctx.strlen_password = strlen_password;
     ctx.strlen_salt = strlen_salt;
