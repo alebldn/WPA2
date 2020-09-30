@@ -26,25 +26,21 @@ The Group Temporal Key (32 bytes) is divided into three separate keys:
 -   8 bytes of Michael MIC Authenticator Tx Key – used to compute MIC on Multicast and Broadcast packets transmitted by AP
 -   8 bytes of Michael MIC Authenticator Rx Key – currently unused as stations do not send multicast traffic
  */
-unsigned char* min(unsigned char* A, unsigned char* S, int strlen)
-{
-    for(int i = 0; i < strlen; i++)
-    {
-        if(A[i] < S[i])
+unsigned char *min(unsigned char *A, unsigned char *S, int strlen) {
+    for (int i = 0; i < strlen; i++) {
+        if (A[i] < S[i])
             return A;
-        else if(A[i] > S[i])
+        else if (A[i] > S[i])
             return S;
     }
     return A;
 }
 
-unsigned char* max(unsigned char* A, unsigned char* S, int strlen)
-{
-    for(int i = 0; i < strlen; i++)
-    {
-        if(A[i] > S[i])
+unsigned char *max(unsigned char *A, unsigned char *S, int strlen) {
+    for (int i = 0; i < strlen; i++) {
+        if (A[i] > S[i])
             return A;
-        else if(A[i] < S[i])
+        else if (A[i] < S[i])
             return S;
     }
     return A;
@@ -65,13 +61,11 @@ unsigned char* max(unsigned char* A, unsigned char* S, int strlen)
 //                                0xc9, 0x3e, 0x1c, 0x92, 0xfa, 0x31, 0xcc, 0x1c          };
 
 
-int main(int argc, char** argv)
-{
+int main(int argc, char **argv) {
     /* TODO: inserire gli argomenti (file.cap) (wordlist) */
     hccapx_t hccapx;
-    FILE* fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
-    if(fp == NULL)
-    {
+    FILE *fp = fopen("C:\\Users\\Delta\\CLionProjects\\cap_parser\\Jarvis.hccapx", "rb");
+    if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
     }
@@ -84,23 +78,22 @@ int main(int argc, char** argv)
 
     free(fp);
 
+
     pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
     unsigned char password[MAX_LENGHT] = "passwordtest";
-    unsigned char salt[MAX_ESSID_LENGTH];
+    unsigned char salt[MAX_LENGHT] = "Jarvis";
 
-
-    memcpy(salt, hccapx.essid, MAX_ESSID_LENGTH);
-    strlen_password = strlen((char*) password);
-    strlen_salt = strlen((char*)salt);
+    strlen_password = strlen((char *) password);
+    strlen_salt = strlen((char *) salt);
 
     memset(ctx.password, 0, MAX_LENGHT);
     memset(ctx.salt, 0, MAX_LENGHT);
 
-    strncpy((char*) ctx.password, (char*) password, strlen_password);
-    strncpy((char*) ctx.salt, (char*) salt, strlen_salt);
+    strncpy((char *) ctx.password, (char *) password, strlen_password);
+    strncpy((char *) ctx.salt, (char *) salt, strlen_salt);
 
     ctx.strlen_password = strlen_password;
     ctx.strlen_salt = strlen_salt;
@@ -113,7 +106,7 @@ int main(int argc, char** argv)
 
     printf("+---------------------------------- PMK ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.T[0], ctx.T[1], ctx.T[2],
-                ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
+           ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
     printf("+-------------------------------------------------------------------------+\n");
 
     /*
@@ -134,7 +127,7 @@ int main(int argc, char** argv)
     hmac_append_int_key(&hmac_ctx, ctx.T[6]);
     hmac_append_int_key(&hmac_ctx, ctx.T[7]);
 
-    hmac_append_str_text(&hmac_ctx, (unsigned char*) "Pairwise key expansion", 22);
+    hmac_append_str_text(&hmac_ctx, (unsigned char *) "Pairwise key expansion", 22);
     hmac_append_char_text(&hmac_ctx, 0x00);
     hmac_append_str_text(&hmac_ctx, min(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
     hmac_append_str_text(&hmac_ctx, max(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
@@ -145,7 +138,8 @@ int main(int argc, char** argv)
     hmac(&hmac_ctx);
 
     printf("+---------------------------------- KCK ----------------------------------+\n");
-    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2],
+           hmac_ctx.digest[3], " ");
     printf("+-------------------------------------------------------------------------+\n");
 
     pbkdf2_ctx_dispose(&ctx);
@@ -166,7 +160,8 @@ int main(int argc, char** argv)
     // 402a7cff 1ab41483 66030581 1c269cf2
 
     printf("+---------------------------------- MIC ----------------------------------+\n");
-    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+    printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2],
+           hmac_ctx.digest[3], " ");
     printf("+-------------------------------------------------------------------------+\n");
 
     hmac_ctx_dispose(&hmac_ctx);
