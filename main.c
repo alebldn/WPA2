@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     hccapx_t hccapx;
     FILE *fp;
 
-    fp = fopen("C:\\Users\\Delta\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
+    fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
     if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
