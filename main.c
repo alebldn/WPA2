@@ -45,12 +45,13 @@ unsigned char *max(unsigned char *A, unsigned char *S, int strlen) {
 int main(int argc, char **argv) {
     /* TODO: inserire gli argomenti (file.cap) (wordlist) */
     hccapx_t hccapx;
-    FILE *fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
+
+    FILE *fp = fopen("C:\\Users\\Delta\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
+
     if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
     }
-
 
     memset(&hccapx, 0, sizeof(hccapx_t));
 

@@ -1,23 +1,36 @@
 #include "pbkdf2.h"
 
 
-/**                                 pbkdf2_ctx_init:
- * Utility function that has to be called once password, salt, strlen_salt, strlen_password and iteration_count are
- * defined, in order to initialize the underlying hmac_sha1_key and text contexts with the correct amount of bits needed
- * for the pbkdf2 algorithm.
+/**                         pbkdf2_ctx_init(pbkdf2_ctx_t*);
  *
- * @param ctx:      pbkdf2_ctx_t struct containing the hmac_context, whose password, salt, strlen_salt, strlen_password
- *                  and iteration_count values have already been set.
+ *  Requires:               [Variables: ctx->password, ctx->salt, ctx->strlen_salt, ctx->strlen_password,
+ *                          ctx->iteration_count set.]
+ *
+ *  Allows:                 - pbkdf2(pbkdf2_ctx_t*);
+ *                          - pbkdf2_ctx_dispose(pbkdf2_ctx_t*);
+ *
+ *  Description:            Utility function that has to be called once password, salt, strlen_salt, strlen_password and
+ *                          iteration_count are defined, in order to initialize the underlying hmac_sha1_key and text
+ *                          contexts with the correct amount of bits needed for the pbkdf2 algorithm.
+ *
+ * @param ctx:              pbkdf2_ctx_t struct containing the hmac_context, whose password, salt, strlen_salt, strlen_password
+ *                          and iteration_count values have already been set.
  */
 void pbkdf2_ctx_init(pbkdf2_ctx_t *ctx) {
     hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32 + BITS_IN_CHUNK);
 }
 
 
-/**                                 pbkdf2:
- * Main algorithm function,
+/**                         pbkdf2(pbkdf2_ctx_t*);
  *
- * @param ctx:      pbkdf2_ctx_t struct containing the hmac_context, already processed by the pbkdf2_ctx_init function.
+ *  Requires:               - pbkdf2_ctx_init(pbkdf2_ctx_t *ctx);
+ *
+ *  Allows:                 - pbkdf2_ctx_dispose(pbkdf2_ctx_t *ctx);
+ *
+ *  Description:            Main function, implemented according to the pbkdf2 algorithm. It initializes the underlying
+ *                          hmac context by itself.
+ *
+ * @param ctx:              pbkdf2_ctx_t struct containing the hmac_context, already processed by the pbkdf2_ctx_init function.
  */
 void pbkdf2(pbkdf2_ctx_t *ctx) {
     uint64_t i, j, index, mk_index;
@@ -76,6 +89,16 @@ void pbkdf2(pbkdf2_ctx_t *ctx) {
     }
 }
 
+/**                         pbkdf2_ctx_dispose(pbkdf2_ctx_t*):
+ *
+ *  Requires:               - pbkdf2_ctx_init(pbkdf2_ctx_t*);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that properly handles the disposal of the output digest array.
+ *
+ * @param ctx:              pbkdf2 context with the soon to be disposed output array.
+ */
 void pbkdf2_ctx_dispose(pbkdf2_ctx_t *ctx) {
     free(ctx->T);
 }
@@ -107,7 +130,7 @@ Input:
         Output =    eefe3d61 cd4da4e4 e9945b3d 6ba2158c 2634e984
 */
 
-/*
+/* Example Main
 int main(int argc, char** argv)
 {
     char salt[MAX_LENGHT] = "salt";

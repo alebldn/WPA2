@@ -44,16 +44,22 @@ typedef struct {
     uint32_t words[WORDS_IN_CHUNK];
 } chunk_t;
 
-/** Definition of the structure sha1_ctx_t: containing
- *  - chunks: A pointer to a possible list of chunks (dynamically allocated)
- *  - digest: A statically defined array of [WORDS_IN_HASH] words representing the output hash digest.
- *  - num_of_chunks: Number of chunks dynamically allocated.
- *  - chunk_counter: counter variable that, during the sha1 execution, counts the amount of chunks
- *    already completed.
- *  - word_counter: counter variable that, during the sha1 execution, counts the amount of words
- *    already completed (within a single chunk, not globally).
- *  - counter: counter variable that, during the sha1 execution, counts the amount of bits already
- *    written within a single word, not globally.
+/**
+ * Definition of the structure sha1_ctx_t: containing
+ *
+ *  - chunks:               A pointer to a possible list of chunks (dynamically allocated)
+ *
+ *  - digest:               A statically defined array of [WORDS_IN_HASH] words representing the output hash digest.
+ *
+ *  - num_of_chunks:        Number of chunks dynamically allocated.
+ *
+ *  - chunk_counter:        Counter variable that, during the sha1 execution, counts the amount of chunks already completed.
+ *
+ *  - word_counter:         Counter variable that, during the sha1 execution, counts the amount of words already completed
+ *                          (within a single chunk, not globally).
+ *
+ *  - counter:              Counter variable that, during the sha1 execution, counts the amount of bits already written
+ *                          within a single word, not globally.
  */
 typedef struct {
     chunk_t *chunks;
@@ -73,21 +79,19 @@ void sha1_append_int(sha1_ctx_t *ctx, uint32_t value);
 
 void sha1_append_long(sha1_ctx_t *ctx, uint64_t value);
 
-void sha1_append_str(sha1_ctx_t *ctx, unsigned char *str, uint64_t strlen);
+void sha1_append_str(sha1_ctx_t *ctx, unsigned char *str, uint32_t strlen);
 
-uint32_t rotate_left(uint32_t value, int32_t shift);
+uint32_t rotate_left(uint32_t value, uint32_t shift);
 
-uint32_t rotate_right(uint32_t value, int32_t shift);
+uint32_t rotate_right(uint32_t value, uint32_t shift);
 
 void sha1(sha1_ctx_t *ctx);
 
-void sha1_ctx_init(sha1_ctx_t *ctx, uint64_t num_of_chunks);
+void sha1_ctx_init(sha1_ctx_t *ctx, uint32_t num_of_chunks);
 
 void sha1_ctx_finalize(sha1_ctx_t *ctx);
 
 void sha1_ctx_dispose(sha1_ctx_t *ctx);
-
-void sha1_pad(sha1_ctx_t *ctx);
 
 void sha1_ctx_reset_counters(sha1_ctx_t *ctx);
 

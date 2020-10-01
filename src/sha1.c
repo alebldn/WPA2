@@ -8,14 +8,18 @@ const uint32_t _h3 = 0x10325476;
 const uint32_t _h4 = 0xC3D2E1F0;
 
 
-/**                                 sha1_append_bit
- * Utility function needed to correctly insert a single bit in the current word of the
- * current chunk. The MSB (Most Significant Bit) has to be evaluated first since the
- * background architecture has to be Big Endian.
+/**                         sha1_append_bit(sha1_ctx_t*, bit_t);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
- *             correctly append the bit.
- * @param bit: bit that has to be appended in the current word of the current chunk.
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function needed to correctly insert a single bit in the current word of the current
+ *                          chunk. The MSB (Most Significant Bit) has to be evaluated first since the background
+ *                          architecture has to be Big Endian.
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to correctly append the bit.
+ *  @param bit:             bit that has to be appended in the current word of the current chunk.
  */
 void sha1_append_bit(sha1_ctx_t *ctx, bit_t bit) {
     ctx->counter--;
@@ -33,13 +37,17 @@ void sha1_append_bit(sha1_ctx_t *ctx, bit_t bit) {
 }
 
 
-/**                                 sha1_append_char:
- * Utility function that uses sha1_append_bit in order to properly store a whole byte (char)
- * inside the current word(s) of the current chunk(s).
+/**                         sha1_append_char(sha1_ctx_t*, unsigned_char value);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
-  *            correctly append the byte.
- * @param value: char byte that has to be appended in the current word of the current chunk
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that uses sha1_append_bit in order to properly store a whole byte (char)
+ *                          inside the current word(s) of the current chunk(s).
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to correctly append the byte.
+ *  @param value:           char byte that has to be appended in the current word of the current chunk
  */
 void sha1_append_char(sha1_ctx_t *ctx, unsigned char value) {
     for (int8_t i = 7; i >= 0; i--) {
@@ -48,29 +56,39 @@ void sha1_append_char(sha1_ctx_t *ctx, unsigned char value) {
 }
 
 
-/**                                 sha1_append_str:
- * Utility function that uses sha1_append_char in order to store a full string of length strlen
- * within the current word(s) of the current chunk(s).
+/**                         sha1_append_str(sha1_ctx_t*, uint32_t);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
- *             correctly append the string in the current word(s) of the current chunk(s)
- * @param str: string that has to be appended inside the chunk(s)
- * @param strlen: length of the string passed as previous argument.
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows                  []
+ *
+ *  Description:            Utility function that uses sha1_append_char in order to store a full string of length strlen
+ *                          within the current word(s) of the current chunk(s).
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to
+ *                          correctly append the string in the current word(s) of the current chunk(s)
+ *  @param str:             string that has to be appended inside the chunk(s)
+ *  @param strlen:          length of the string passed as previous argument.
  */
-void sha1_append_str(sha1_ctx_t *ctx, unsigned char *str, uint64_t strlen) {
+void sha1_append_str(sha1_ctx_t *ctx, unsigned char *str, uint32_t strlen) {
     for (uint64_t i = 0; i < strlen; i++) {
         sha1_append_char(ctx, str[i]);
     }
 }
 
 
-/**                                 sha1_append_int:
- * Utility function that uses sha1_append_bit in order to store a 32 bit unsigned integer within the
- * current word(s) of the current chunk(s)
+/**                         sha1_append_int(sha1_ctx_t*, uint32_t);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
- *             correctly append the unsigned integer in the current word(s) of the current chunk(s)
- * @param value: 32 bit unsigned integer that has to be appended in the chunks.
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that uses sha1_append_bit in order to store a 32 bit unsigned integer within
+ *                          the current word(s) of the current chunk(s).
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to correctly append the
+ *                          unsigned integer in the current word(s) of the current chunk(s).
+ *  @param value:           32 bit unsigned integer that has to be appended in the chunks.
  */
 void sha1_append_int(sha1_ctx_t *ctx, uint32_t value) {
     for (int8_t i = 31; i >= 0; i--) {
@@ -79,13 +97,18 @@ void sha1_append_int(sha1_ctx_t *ctx, uint32_t value) {
 }
 
 
-/**                                 sha1_append_long:
- * Utility function that uses sha1_append_bit in order to store a 64 bit unsigned integer within the
- * current word(s) of the current chunk(s)
+/**                         sha1_append_long(sha1_ctx_t*, uint64_t);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
- *             correctly append the unsigned integer in the current word(s) of the current chunk(s)
- * @param value: 64 bit unsigned integer that has to be appended in the chunks.
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that uses sha1_append_bit in order to store a 64 bit unsigned integer within
+ *                          the current word(s) of the current chunk(s).
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to correctly append the
+ *                          unsigned integer in the current word(s) of the current chunk(s).
+ *  @param value:           64 bit unsigned integer that has to be appended in the chunks.
  */
 void sha1_append_long(sha1_ctx_t *ctx, uint64_t value) {
     for (int8_t i = 63; i >= 0; i--) {
@@ -94,45 +117,61 @@ void sha1_append_long(sha1_ctx_t *ctx, uint64_t value) {
 }
 
 
-/**                                 rotate_left:
- * Utility function that shifts to the left all the bits inside a uint32_t word and inserts the overflowed ones to the
- * right side of the word. Example with an 8 bit word:
- *          rotate_left(|1|0|0|0|0|1|0|0|, 1) = |0|0|0|0|1|0|0|1|
- *          rotate_left(|1|0|0|0|0|1|0|0|, 2) = |0|0|0|1|0|0|1|0|
- *          rotate_left(|1|0|0|0|0|1|0|0|, 3) = |0|0|1|0|0|1|0|0|
+/**                         rotate_left(uint32_t, uint32_t);
  *
- * @param value: uint32_t word that has to be rotated.
- * @param shift: value of the rotation (max should be 31 bit)
- * @return: rotated uint32_t word.
+ *  Requires:               []
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that shifts to the left all the bits inside a uint32_t word and inserts the
+ *                          overflowed ones to the right side of the word. Example with an 8 bit word:
+ *
+ *                              rotate_left(|1|0|0|0|0|1|0|0|, 1) = |0|0|0|0|1|0|0|1|
+ *                              rotate_left(|1|0|0|0|0|1|0|0|, 2) = |0|0|0|1|0|0|1|0|
+ *                              rotate_left(|1|0|0|0|0|1|0|0|, 3) = |0|0|1|0|0|1|0|0|
+ *
+ *  @param value:           uint32_t word that has to be rotated.
+ *  @param shift:           value of the rotation (max should be 31 bit).
+ *  @return:                rotated uint32_t word.
  */
-uint32_t rotate_left(const uint32_t value, int32_t shift) {
+uint32_t rotate_left(const uint32_t value, uint32_t shift) {
     if ((shift &= sizeof(value) * 8 - 1) == 0)
         return value;
     return (value << shift) | (value >> (sizeof(value) * 8 - shift));
 }
 
 
-/**                                 rotate_right:
- * Utility function that shifts to the right all the bits inside a uint32_t word and inserts the overflowed ones to the
- * left side of the word exactly as rotate_left function but differs for the direction.
+/**                         rotate_right(uint32_t, uint32_t);
  *
- * @param value: uint32_t word that has to be rotated.
- * @param shift: value of the right shift rotation (max should be 31 bit)
- * @return: rotated uint32_t word.
+ *  Requires:               []
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that shifts to the right all the bits inside a uint32_t word and inserts the
+ *                          overflowed ones to the left side of the word exactly as rotate_left function but differs for
+ *                          the direction.
+ *
+ *  @param value:           uint32_t word that has to be rotated.
+ *  @param shift:           value of the right shift rotation (max should be 31 bit)
+ *  @return:                rotated uint32_t word.
  */
-uint32_t rotate_right(const uint32_t value, int32_t shift) {
+uint32_t rotate_right(const uint32_t value, uint32_t shift) {
     if ((shift &= sizeof(value) * 8 - 1) == 0)
         return value;
     return (value >> shift) | (value << (sizeof(value) * 8 - shift));
 }
 
 
-/**                                 sha1_pad:
- * Utility function that pads the remaining unwritten words of the last chunk with the correct amount of zeroes
- * as specified in the sha1 algorithm.
+/**                         [Private] sha1_pad(sha1_ctx_t*);
  *
- * @param ctx: struct type that holds both chunks and counters needed in order to
- *             correctly find the correct amount of zeroes that need to be appended in order to pad the last chunk
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that pads the remaining unwritten words of the last chunk with the correct
+ *                          amount of zeroes as specified in the sha1 algorithm.
+ *
+ *  @param ctx:             struct type that holds both chunks and counters needed in order to correctly find the correct
+ *                          amount of zeroes that need to be appended in order to pad the last chunk
  */
 void sha1_pad(sha1_ctx_t *ctx) {
     uint64_t cap = BITS_IN_CHUNK*(ctx->num_of_chunks - ctx->chunk_counter) -
@@ -144,10 +183,16 @@ void sha1_pad(sha1_ctx_t *ctx) {
 }
 
 
-/**                                 sha1_ctx_reset_counters:
- * Utility function that resets all (bit counter, word counter and chunk counter)  sha1 counter within the context passed as pointer.
+/**                         sha1_ctx_reset_counters(sha1_ctx_t*);
  *
- * @param ctx: struct type that holds all counter variables that need to be set to initial values.
+ *  Requires:               []
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that resets all (bit counter, word counter and chunk counter)  sha1 counter
+ *                          within the context passed as pointer.
+ *
+ *  @param ctx:             struct type that holds all counter variables that need to be set to initial values.
  */
 void sha1_ctx_reset_counters(sha1_ctx_t *ctx) {
     ctx->word_counter = SHA1_WORD_COUNTER_INIT;
@@ -156,16 +201,24 @@ void sha1_ctx_reset_counters(sha1_ctx_t *ctx) {
 }
 
 
-/**                                 sha1_ctx_init:
- * Utility function that initializes the sha1_ctx passed as argument with the correct amount of chunks.
- * This function sets to 0 all words in chunks and digest and calls sha1_ctx_reset_counters in order to correctly
- * initialize all (bit, word and chunk) counters
+/**                         sha1_ctx_init(sha1_ctx_t*, uint32_t);
  *
- * @param ctx: struct type that holds both chunk pointer and counters needed to correctly initialize the sha1_ctx struct
- * @param num_of_chunks: number of chunks needed in order to store all the information on which the sha1 algorithm has to
- *                       be applied
+ *  Requires:               []
+ *
+ *  Allows:                 [All append functions.]
+ *                          - sha1_finalize(sha1_ctx_t*);
+ *                          - sha1_ctx_dispose(sha1_ctx_t*);
+ *
+ *  Description:            Utility function that initializes the sha1_ctx passed as argument with the correct amount
+ *                          of chunks. This function sets to 0 all words in chunks and digest and calls.
+ *                          sha1_ctx_reset_counters in order to correctly initialize all (bit, word and chunk) counters.
+ *
+ *  @param ctx:             struct type that holds both chunk pointer and counters needed to correctly initialize the
+ *                          sha1_ctx struct.
+ *  @param num_of_chunks:   number of chunks needed in order to store all the information on which the sha1 algorithm
+ *                          has to be applied.
  */
-void sha1_ctx_init(sha1_ctx_t *ctx, uint64_t num_of_chunks) {
+void sha1_ctx_init(sha1_ctx_t *ctx, uint32_t num_of_chunks) {
     uint32_t i, j;
 
     ctx->num_of_chunks = num_of_chunks;
@@ -182,13 +235,20 @@ void sha1_ctx_init(sha1_ctx_t *ctx, uint64_t num_of_chunks) {
 }
 
 
-/**                                 sha1_ctx_finalize:
- * Utility function that has to be called after all data that needs to be hashed has been written to the sha1_ctx structure
- * chunks and before the very execution of the function sha1.
- * As defined by the SHA1 algorithm, it appends the final bit (1) to the last written chunk, pads with zeroes the
- * remaining words and appends a 64 bit integer representing the length in bit of the data previously written.
+/**                         sha1_ctx_finalize(sha1_ctx_t*);
  *
- * @param ctx: structure that holds every parameter needed in order to finalize the data and finally execute the sha1 algorithm
+ *  Requires:               sha1_ctx_init(sha1_ctx_t*);
+ *                          [Ended the 'appending to chunks' phase.]
+ *
+ *  Allows:                 sha1(sha1_ctx_t*);
+ *
+ *  Description:            Utility function that has to be called after all data that needs to be hashed has been
+ *                          written to the sha1_ctx structure chunks and before the very execution of the function sha1.
+ *                          As defined by the SHA1 algorithm, it appends the final bit (1) to the last written chunk,
+ *                          pads with zeroes the remaining words and appends a 64 bit integer representing the length in
+ *                          bit of the data previously written.
+ *
+ *  @param ctx:             structure that holds every parameter needed in order to finalize the data and finally execute the sha1 algorithm
  */
 void sha1_ctx_finalize(sha1_ctx_t *ctx) {
     uint32_t len = ctx->chunk_counter * BITS_IN_CHUNK + ctx->word_counter * BITS_IN_WORD +
@@ -200,10 +260,15 @@ void sha1_ctx_finalize(sha1_ctx_t *ctx) {
 }
 
 
-/**                                 sha1_ctx_dispose:
- * Utility function that disposes the dynamically allocated chunk array via the free() function.
+/**                         sha1_ctx_dispose(sha1_ctx_t*);
  *
- * @param ctx: structure that holds the chunk array that needs to be disposed.
+ *  Requires:               - sha1_ctx_init(sha1_ctx_t*, uint32_t);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Utility function that disposes the dynamically allocated chunk array via the free() function.
+ *
+ *  @param ctx:             structure that holds the chunk array that needs to be disposed.
  */
 void sha1_ctx_dispose(sha1_ctx_t *ctx) {
     free(ctx->chunks);
@@ -211,10 +276,15 @@ void sha1_ctx_dispose(sha1_ctx_t *ctx) {
 }
 
 
-/**                                 sha1:
- * Actual sha1 algorithm. Processes the data in the chunks and generates the sha1 hash digest.
+/**                         sha1(sha1_ctx_t*);
  *
- * @param ctx: finalized sha1_ctx_t structure that holds all the data needed in order to evaluate the hash.
+ *  Requires:               - sha1_ctx_finalize(sha1_ctx_t*);
+ *
+ *  Allows:                 []
+ *
+ *  Description:            Actual sha1 algorithm. Processes the data in the chunks and generates the sha1 hash digest.
+ *
+ * @param ctx:              finalized sha1_ctx_t structure that holds all the data needed in order to evaluate the hash.
  */
 void sha1(sha1_ctx_t *ctx) {
     uint32_t w[80];

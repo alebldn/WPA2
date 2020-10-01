@@ -12,18 +12,29 @@
 #include "hmac.h"
 
 /** Defines */
+/** Max length of the password */
 #define MAX_LENGHT          64
 
-/** Definition of the structure pbkdf2_ctx_t: containing
- *  - hmac_ctx: a struct containing all the variables needed in order to execute the hmac_sha1 algorithm.
- *  - password: a string containing the password as dictated in the pbkdf2 algorithm.
- *  - salt:     a string containing the salt to be applied as dictated in the pbkdf2 algorithm.
- *  - strlen_password:  a 32 bit unsigned integer containing the length of the password in chars (bytes).
- *  - strlen_salt:      a 32 bit unsigned integer containing the length of the salt in chars (bytes).
- *  - iteration_count:  a 32 bit unsigned integer representing the number of iterations of hmac_sha1 that need to be
- *                      applied according to the pbkdf2 algotithm.
- *  - T:                dynamic array of [words_in_T] words containing pbkdf2's output.
- *  - words_in_T:       number of 32 bit unsigned integer words in output dynamic array.
+/**
+ * Definition of the structure pbkdf2_ctx_t, containing:
+ *
+ *  - hmac_ctx:             a struct containing all the variables needed in order to execute the hmac_sha1 algorithm.
+ *
+ *  - password:             a string containing the password as dictated in the pbkdf2 algorithm.
+ *
+ *  - salt:                 a string containing the salt to be applied as dictated in the pbkdf2 algorithm.
+ *
+ *  - strlen_password:      a 32 bit unsigned integer containing the length of the password in chars (bytes).
+ *
+ *  - strlen_salt:          a 32 bit unsigned integer containing the length of the salt in chars (bytes).
+ *
+ *  - iteration_count:      a 32 bit unsigned integer representing the number of iterations of hmac_sha1 that need to be
+ *                          applied according to the pbkdf2 algotithm.
+ *
+ *  - T:                    dynamic array of [words_in_T] words containing pbkdf2's output.
+ *
+ *  - words_in_T:           number of 32 bit unsigned integer words in output dynamic array.
+ *
  *  - bits_in_result_hash:  number of bits contained in the output hash (not necessarily equal to words_in_T * 32).
  */
  typedef struct {
