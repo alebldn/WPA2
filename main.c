@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
     hccapx_t hccapx;
     FILE *fp;
 
-    fp = fopen("C:\\Users\\Foxtrot\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
+    fp = fopen("C:\\Users\\Delta\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
     if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
@@ -58,17 +58,16 @@ int main(int argc, char **argv) {
     /* TODO: Legge sempre e solo la prima struttura hccapx_t, nel caso in cui fossero di più, bisogna verificare e iterare */
     fread(&hccapx, sizeof(hccapx_t), 1, fp);
 
-    free(fp);
+    fclose(fp);
 
     pbkdf2_ctx_t ctx;
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
     unsigned char password[MAX_LENGTH] = "passwordtest";
-    unsigned char salt[MAX_LENGTH] = "Jarvis";
 
     strlen_password = strlen((char *) password);
-    strlen_salt = strlen((char *) hccapx.essid);
+    strlen_salt = hccapx.essid_len;
 
     memset(ctx.password, 0, MAX_LENGTH);
     memset(ctx.salt, 0, MAX_LENGTH);
@@ -138,12 +137,12 @@ int main(int argc, char **argv) {
 
     hmac(&hmac_ctx);
 
-    // 402a7cff 1ab41483 66030581 1c269cf2
-
     printf("+---------------------------------- MIC ----------------------------------+\n");
     printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2],
            hmac_ctx.digest[3], " ");
     printf("+-------------------------------------------------------------------------+\n");
+
+    // 402a7cff 1ab41483 66030581 1c269cf2
 
     hmac_ctx_dispose(&hmac_ctx);
 }
