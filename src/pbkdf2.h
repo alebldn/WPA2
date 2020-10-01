@@ -13,7 +13,7 @@
 
 /** Defines */
 /** Max length of the password */
-#define MAX_LENGHT          64
+#define MAX_LENGTH          64
 
 /**
  * Definition of the structure pbkdf2_ctx_t, containing:
@@ -39,8 +39,8 @@
  */
  typedef struct {
     hmac_ctx_t hmac_ctx;
-    unsigned char password[MAX_LENGHT];
-    unsigned char salt[MAX_LENGHT];
+    unsigned char password[MAX_LENGTH];
+    unsigned char salt[MAX_LENGTH];
     uint32_t strlen_password;
     uint32_t strlen_salt;
     uint32_t iteration_count;

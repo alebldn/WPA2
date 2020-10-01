@@ -116,8 +116,8 @@ void hmac_append_str_text(hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen
  *
  *  Allows:                 []
  *
- *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 32 bit usigned
- *                          integer to key chunks.
+ *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 32 bit
+ *                          unsigned integer to key chunks.
  *
  *  @param ctx:             structure containing chunks and counters of both Text and Key variables needed to perform
  *                          HMAC.
@@ -134,8 +134,8 @@ void hmac_append_int_key(hmac_ctx_t *ctx, uint32_t value) {
  *
  *  Allows:                 []
  *
- *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 32 bit usigned
- *                          integer to text chunks.
+ *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 32 bit
+ *                          unsigned integer to text chunks.
  *
  *  @param ctx:             structure containing chunks and counters of both Text and Key variables needed to perform
  *                          HMAC.
@@ -153,7 +153,7 @@ void hmac_append_int_text(hmac_ctx_t *ctx, uint32_t value) {
  *  Allows:                 []
  *
  *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 64
- *                          bit usigned integer to key chunks.
+ *                          bit unsigned integer to key chunks.
  *
  *  @param ctx:             structure containing chunks and counters of both Text and Key variables needed to perform
  *                          HMAC.
@@ -171,7 +171,7 @@ void hmac_append_long_key(hmac_ctx_t *ctx, uint32_t value) {
  *  Allows:                 []
  *
  *  Description:            Wrapper utility function that calls the underlying sha1_append_bit in order to append a 64
- *                          bit usigned integer to text chunks.
+ *                          bit unsigned integer to text chunks.
  *
  *  @param ctx:             structure containing chunks and counters of both Text and Key variables needed to perform
  *                          HMAC.

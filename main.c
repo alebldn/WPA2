@@ -45,9 +45,9 @@ unsigned char *max(unsigned char *A, unsigned char *S, int strlen) {
 int main(int argc, char **argv) {
     /* TODO: inserire gli argomenti (file.cap) (wordlist) */
     hccapx_t hccapx;
+    FILE *fp;
 
-    FILE *fp = fopen("C:\\Users\\Delta\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
-
+    fp = fopen("C:\\Users\\Delta\\CLionProjects\\WPA2\\Jarvis.hccapx", "rb");
     if (fp == NULL) {
         perror("Error in opening input file, exiting.\n");
         exit(-1);
@@ -64,14 +64,14 @@ int main(int argc, char **argv) {
     hmac_ctx_t hmac_ctx;
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
-    unsigned char password[MAX_LENGHT] = "passwordtest";
-    unsigned char salt[MAX_LENGHT] = "Jarvis";
+    unsigned char password[MAX_LENGTH] = "passwordtest";
+    unsigned char salt[MAX_LENGTH] = "Jarvis";
 
     strlen_password = strlen((char *) password);
     strlen_salt = strlen((char *) hccapx.essid);
 
-    memset(ctx.password, 0, MAX_LENGHT);
-    memset(ctx.salt, 0, MAX_LENGHT);
+    memset(ctx.password, 0, MAX_LENGTH);
+    memset(ctx.salt, 0, MAX_LENGTH);
 
     strncpy((char *) ctx.password, (char *) password, strlen_password);
     strncpy((char *) ctx.salt, (char *) hccapx.essid, strlen_salt);
