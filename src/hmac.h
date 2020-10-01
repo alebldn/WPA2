@@ -51,9 +51,9 @@ void hmac_append_int_key(hmac_ctx_t *ctx, uint32_t value);
 
 void hmac_append_int_text(hmac_ctx_t *ctx, uint32_t value);
 
-void hmac_append_long_key(hmac_ctx_t *ctx, uint32_t value);
+void hmac_append_long_key(hmac_ctx_t *ctx, uint64_t value);
 
-void hmac_append_long_text(hmac_ctx_t *ctx, uint32_t value);
+void hmac_append_long_text(hmac_ctx_t *ctx, uint64_t value);
 
 void hmac_ctx_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text);
 
