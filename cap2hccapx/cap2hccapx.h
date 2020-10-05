@@ -23,6 +23,8 @@ struct hccapx
 
 } __attribute__((packed));
 
+int cap2hccapx(int arc, char* argv[]);
+
 typedef struct hccapx hccapx_t;
 
 #endif //WPA2_CAP2HCCAPX

@@ -133,8 +133,8 @@ Input:
 /* Example Main
 int main(int argc, char** argv)
 {
-    char salt[MAX_LENGHT] = "salt";
-    char password[MAX_LENGHT] = "password";
+    char salt[MAX_LENGTH] = "salt";
+    char password[MAX_LENGTH] = "password";
 
     uint32_t strlen_password, strlen_salt;
     uint32_t iteration_count = 4096;
