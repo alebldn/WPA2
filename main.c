@@ -108,31 +108,42 @@ hccapx_t process_cap_file(int argc, char **argv) {
 
         while (fread(&temp_hccapx, hccapx_struct_size, 1, hccapx_file) == 1) {
 
-            number_of_hccapx_structs++;
-            hccapx_list = (hccapx_t *) realloc(hccapx_list, number_of_hccapx_structs * hccapx_struct_size);
-            hccapx_list[number_of_hccapx_structs - 1] = temp_hccapx;
-
+            if (fread(&temp_hccapx, hccapx_struct_size, 1, hccapx_file) == 1) {
+                number_of_hccapx_structs++;
+                hccapx_list = (hccapx_t *) realloc(hccapx_list, number_of_hccapx_structs * hccapx_struct_size);
+                hccapx_list[number_of_hccapx_structs - 1] = temp_hccapx;
+            }
+            else {
+                // malformed .hccapx file
+                break;
+            }
         }
-
         fclose(hccapx_file);
 
         if(number_of_hccapx_structs > 0) {
-            while (number_of_hccapx_structs < hccapx_choice) {
-                printf("Select the HS you want to crack between:\n");
-                for (uint32_t i = 0; i < number_of_hccapx_structs; i++) {
-                    printf("%d) [AP]: \"%s\" - [MAC_AP]: %02x:%02x:%02x:%02x:%02x:%02x - [MAC_STA]: %02x:%02x:%02x:%02x:%02x:%02x\n",
-                           i+1,
-                           hccapx_list[i].essid,
-                           hccapx_list[i].mac_ap[0], hccapx_list[i].mac_ap[1], hccapx_list[i].mac_ap[2],
-                           hccapx_list[i].mac_ap[3], hccapx_list[i].mac_ap[4], hccapx_list[i].mac_ap[5],
-                           hccapx_list[i].mac_sta[0], hccapx_list[i].mac_sta[1], hccapx_list[i].mac_sta[2],
-                           hccapx_list[i].mac_sta[3], hccapx_list[i].mac_sta[4], hccapx_list[i].mac_sta[5]
-                    );
-                }
-                scanf("%u", &hccapx_choice);
-                if (hccapx_choice > number_of_hccapx_structs)
-                {
-                    printf("Choice [%u] not valid.\n", hccapx_choice);
+            if(number_of_hccapx_structs == 1)
+            {
+                hccapx_choice = 1;
+            }
+            else {
+
+                printf("\n\n\n");
+                while (number_of_hccapx_structs < hccapx_choice) {
+                    printf("Select the HS you want to crack between:\n");
+                    for (uint32_t i = 0; i < number_of_hccapx_structs; i++) {
+                        printf("%d) [AP]: \"%s\" - [MAC_AP]: %02x:%02x:%02x:%02x:%02x:%02x - [MAC_STA]: %02x:%02x:%02x:%02x:%02x:%02x\n",
+                               i + 1,
+                               hccapx_list[i].essid,
+                               hccapx_list[i].mac_ap[0], hccapx_list[i].mac_ap[1], hccapx_list[i].mac_ap[2],
+                               hccapx_list[i].mac_ap[3], hccapx_list[i].mac_ap[4], hccapx_list[i].mac_ap[5],
+                               hccapx_list[i].mac_sta[0], hccapx_list[i].mac_sta[1], hccapx_list[i].mac_sta[2],
+                               hccapx_list[i].mac_sta[3], hccapx_list[i].mac_sta[4], hccapx_list[i].mac_sta[5]
+                        );
+                    }
+                    scanf("%u", &hccapx_choice);
+                    if (hccapx_choice > number_of_hccapx_structs) {
+                        printf("Choice [%u] not valid.\n", hccapx_choice);
+                    }
                 }
             }
         }
