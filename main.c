@@ -277,6 +277,7 @@ int main(int argc, char **argv) {
 
     uint32_t strlen_password, strlen_salt;
     unsigned char password[MAX_LENGTH];
+    char* new_line;
 
     check_arguments(argc, argv);
 
@@ -285,7 +286,16 @@ int main(int argc, char **argv) {
     wordlist = fopen(argv[2], "r");
     if (wordlist) {
 
-        while (fgets((char *) password, MAX_LENGTH, wordlist) != NULL) {
+        while (fgets(password, MAX_LENGTH, wordlist) != NULL) {
+
+            /* Carriage Return substitution with EOL */
+            new_line = strchr(password, '\n');
+            if (*new_line)
+            {
+                *new_line = '\0';
+            }
+
+            printf("Testing password:\t%s\n", password);
 
             strlen_password = strlen((char *) password);
             strlen_salt = hccapx.essid_len;
@@ -373,11 +383,14 @@ int main(int argc, char **argv) {
 
             if (verify_mic(&hmac_ctx, &hccapx)) {
                 printf("Password found: \"%s\"\n", password);
-                break;
+                exit(0);
             }
+
             hmac_ctx_dispose(&hmac_ctx);
         }
+        printf("None of the tested passwords matches...\n");
         fclose(wordlist);
+        exit(0);
     } else {
         fprintf(stderr, "Error in opening wordlist file \"%s\", exiting.\n", argv[2]);
         exit(-1);
