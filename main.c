@@ -18,7 +18,7 @@
  * @return:                 Returns the Nonce or the MAC whose numerical value is lesser than the other.
  */
 unsigned char *min(unsigned char *A, unsigned char *S, uint32_t strlen) {
-    for (int i = 0; i < strlen; i++) {
+    for (uint32_t i = 0; i < strlen; i++) {
         if (A[i] < S[i])
             return A;
         else if (A[i] > S[i])
@@ -43,7 +43,7 @@ unsigned char *min(unsigned char *A, unsigned char *S, uint32_t strlen) {
  * @return:                 Returns the Nonce or the MAC whose numerical value is greater than the other.
  */
 unsigned char *max(unsigned char *A, unsigned char *S, uint32_t strlen) {
-    for (int i = 0; i < strlen; i++) {
+    for (uint32_t i = 0; i < strlen; i++) {
         if (A[i] > S[i])
             return A;
         else if (A[i] < S[i])
@@ -164,7 +164,6 @@ hccapx_t process_cap_file(int argc, char **argv) {
     cap2hccapx(cap2hccapx_argc, cap2hccapx_argv);
     free(cap2hccapx_argv);
 
-
     hccapx_file = fopen(hccapx_filename, "rb");
     if (hccapx_file) {
 
@@ -177,7 +176,7 @@ hccapx_t process_cap_file(int argc, char **argv) {
                 hccapx_list = (hccapx_t *) realloc(hccapx_list, number_of_hccapx_structs * hccapx_struct_size);
                 hccapx_list[number_of_hccapx_structs - 1] = temp_hccapx;
             } else {
-                // malformed .hccapx file
+                /* Malformed .hccapx file */
                 break;
             }
         }

@@ -158,7 +158,7 @@ int main(int argc, char** argv)
 
     pbkdf2(&ctx);
 
-    for(int i = 0; i < ctx.bits_in_result_hash / BITS_IN_WORD; i++)
+    for(uint32_t i = 0; i < ctx.bits_in_result_hash / BITS_IN_WORD; i++)
     {
         printf("%08x ", ctx.T[i]);
     }
