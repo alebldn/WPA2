@@ -174,7 +174,7 @@ uint32_t rotate_right(const uint32_t value, uint32_t shift) {
  *                          amount of zeroes that need to be appended in order to pad the last chunk
  */
 void sha1_pad(sha1_ctx_t *ctx) {
-    uint64_t cap = BITS_IN_CHUNK*(ctx->num_of_chunks - ctx->chunk_counter) -
+    uint64_t cap = BITS_IN_CHUNK * (ctx->num_of_chunks - ctx->chunk_counter) -
                    ctx->word_counter * BITS_IN_WORD - BITS_IN_WORD + ctx->counter - 64;
 
     for (uint64_t i = 0; i < cap; i++) {

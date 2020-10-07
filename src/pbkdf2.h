@@ -37,7 +37,7 @@
  *
  *  - bits_in_result_hash:  number of bits contained in the output hash (not necessarily equal to words_in_T * 32).
  */
- typedef struct {
+typedef struct {
     hmac_ctx_t hmac_ctx;
     unsigned char password[MAX_LENGTH];
     unsigned char salt[MAX_LENGTH];
