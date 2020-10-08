@@ -33,75 +33,76 @@ void pbkdf2_ctx_init(pbkdf2_ctx_t *ctx) {
  * @param ctx:              pbkdf2_ctx_t struct containing the hmac_context, already processed by the pbkdf2_ctx_init function.
  */
 void pbkdf2(pbkdf2_ctx_t *ctx) {
-    uint64_t i, j, index, mk_index;
-    uint64_t len;
 
-    if ((ctx->bits_in_result_hash & BITS_IN_WORD - 1) != 0) {
-        fprintf(stderr, "Bits in result hash is not a multiple of 32 (%d)\n", ctx->bits_in_result_hash);
-        exit(-1);
-    }
+    uint32_t  j, index, mk_index;
 
-    len = (ctx->bits_in_result_hash + BITS_IN_HASH - 1) / BITS_IN_HASH;
-    ctx->words_in_T = ctx->bits_in_result_hash / BITS_IN_WORD;
-
-    ctx->T = (uint32_t *) malloc(ctx->words_in_T * sizeof(uint32_t));
-
-    for (index = 0; index < ctx->words_in_T; index++) {
+    for (index = 0; index < WORDS_IN_T; index++) {
         ctx->T[index] = 0;
     }
 
-    for (i = 1; i <= len; i++) {
+    hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32);
+    //                                                                        + 32 per l'intero i aggiunto dopo al text (↑)
 
-        hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32);
-        //                                                                        + 32 per l'intero i aggiunto dopo al text (↑)
+    hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
+    hmac_append_str_text(&ctx->hmac_ctx, ctx->salt, ctx->strlen_salt);
+    hmac_append_int_text(&ctx->hmac_ctx, 1);
 
-        hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
-        hmac_append_str_text(&ctx->hmac_ctx, ctx->salt, ctx->strlen_salt);
-        hmac_append_int_text(&ctx->hmac_ctx, i);
+    for (j = 1; j <= ITERATION_COUNT; j++) {
 
-        for (j = 1; j <= ctx->iteration_count; j++) {
-
-            hmac(&ctx->hmac_ctx);
-
-            hmac_ctx_dispose(&ctx->hmac_ctx);
-            hmac_ctx_init(&ctx->hmac_ctx, BITS_IN_HASH, ctx->strlen_salt * 8 + 32);
-            //                                         + 32 per l'intero i aggiunto dopo al text (↑)
-
-
-            for (index = 0; index < WORDS_IN_HASH; index++) {
-                mk_index = (i - 1) * WORDS_IN_HASH + index;
-                if (mk_index >= ctx->words_in_T) {
-                    break;
-                }
-                ctx->T[mk_index] ^= ctx->hmac_ctx.digest[index];
-            }
-
-            hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[0]);
-            hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[1]);
-            hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[2]);
-            hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[3]);
-            hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[4]);
-            hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
-
-        }
+        hmac(&ctx->hmac_ctx);
 
         hmac_ctx_dispose(&ctx->hmac_ctx);
+        hmac_ctx_init(&ctx->hmac_ctx, BITS_IN_HASH, ctx->strlen_salt * 8 + 32);
+        //                                         + 32 per l'intero i aggiunto dopo al text (↑)
+
+        ctx->T[0] ^= ctx->hmac_ctx.digest[0];
+        ctx->T[1] ^= ctx->hmac_ctx.digest[1];
+        ctx->T[2] ^= ctx->hmac_ctx.digest[2];
+        ctx->T[3] ^= ctx->hmac_ctx.digest[3];
+        ctx->T[4] ^= ctx->hmac_ctx.digest[4];
+
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[0]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[1]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[2]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[3]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[4]);
+        hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
+
     }
+
+    hmac_ctx_dispose(&ctx->hmac_ctx);
+
+    hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32);
+    //                                                                        + 32 per l'intero i aggiunto dopo al text (↑)
+
+    hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
+    hmac_append_str_text(&ctx->hmac_ctx, ctx->salt, ctx->strlen_salt);
+    hmac_append_int_text(&ctx->hmac_ctx, 2);
+
+    for (j = 1; j <= ITERATION_COUNT; j++) {
+
+        hmac(&ctx->hmac_ctx);
+
+        hmac_ctx_dispose(&ctx->hmac_ctx);
+        hmac_ctx_init(&ctx->hmac_ctx, BITS_IN_HASH, ctx->strlen_salt * 8 + 32);
+        //                                         + 32 per l'intero i aggiunto dopo al text (↑)
+
+        ctx->T[5] ^= ctx->hmac_ctx.digest[0];
+        ctx->T[6] ^= ctx->hmac_ctx.digest[1];
+        ctx->T[7] ^= ctx->hmac_ctx.digest[2];
+
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[0]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[1]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[2]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[3]);
+        hmac_append_int_text(&ctx->hmac_ctx, ctx->hmac_ctx.digest[4]);
+        hmac_append_str_key(&ctx->hmac_ctx, ctx->password, ctx->strlen_password);
+
+    }
+
+    hmac_ctx_dispose(&ctx->hmac_ctx);
 }
 
-/**                         pbkdf2_ctx_dispose(pbkdf2_ctx_t*):
- *
- *  Requires:               - pbkdf2_ctx_init(pbkdf2_ctx_t*);
- *
- *  Allows:                 []
- *
- *  Description:            Utility function that properly handles the disposal of the output digest array.
- *
- * @param ctx:              pbkdf2 context with the soon to be disposed output array.
- */
-void pbkdf2_ctx_dispose(pbkdf2_ctx_t *ctx) {
-    free(ctx->T);
-}
 
 /*     CHEATSHEET
 

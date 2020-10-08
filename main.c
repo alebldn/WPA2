@@ -290,7 +290,7 @@ int main(int argc, char **argv) {
 
             /* Carriage Return substitution with EOL */
             carriage_return = strchr(password, '\n');
-            if (*carriage_return)
+            if (carriage_return)
             {
                 *carriage_return = '\0';
             }
@@ -308,8 +308,6 @@ int main(int argc, char **argv) {
 
             ctx.strlen_password = strlen_password;
             ctx.strlen_salt = strlen_salt;
-            ctx.iteration_count = 4096;
-            ctx.bits_in_result_hash = 256;
 
             pbkdf2_ctx_init(&ctx);
 
@@ -359,7 +357,6 @@ int main(int argc, char **argv) {
 //            printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
 //            printf("+-------------------------------------------------------------------------+\n");
 
-            pbkdf2_ctx_dispose(&ctx);
 
             hmac_ctx_dispose(&hmac_ctx);
 

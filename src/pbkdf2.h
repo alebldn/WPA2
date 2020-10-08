@@ -14,6 +14,12 @@
 /** Defines */
 /** Max length of the password */
 #define MAX_LENGTH          64
+/** Bits necessary to derive PMK */
+#define BITS_IN_RESULT_HASH 256
+/** Length of PMK in words (256 / 32 = 8) */
+#define WORDS_IN_T          8
+/** Number of iterations in pbkdf2 */
+#define ITERATION_COUNT     4096
 
 /**
  * Definition of the structure pbkdf2_ctx_t, containing:
@@ -43,10 +49,7 @@ typedef struct {
     unsigned char salt[MAX_LENGTH];
     uint32_t strlen_password;
     uint32_t strlen_salt;
-    uint32_t iteration_count;
-    uint32_t *T;
-    uint32_t words_in_T;
-    uint32_t bits_in_result_hash;
+    uint32_t T[WORDS_IN_T];
 } pbkdf2_ctx_t;
 
 /** Function declarations */
