@@ -289,7 +289,7 @@ int main(int argc, char **argv) {
 
             /* Carriage Return substitution with EOL */
             new_line = strchr(password, '\n');
-            if (*new_line)
+            if (new_line)
             {
                 *new_line = '\0';
             }
