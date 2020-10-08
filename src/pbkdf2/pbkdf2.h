@@ -9,15 +9,18 @@
 #define PBKDF2_H
 
 /** Includes */
-#include "hmac.h"
+#include "pbkdf2_specific_hmac.h"
 
 /** Defines */
 /** Max length of the password */
 #define MAX_LENGTH          64
+
 /** Bits necessary to derive PMK */
 #define BITS_IN_RESULT_HASH 256
+
 /** Length of PMK in words (256 / 32 = 8) */
 #define WORDS_IN_T          8
+
 /** Number of iterations in pbkdf2 */
 #define ITERATION_COUNT     4096
 
@@ -44,7 +47,7 @@
  *  - bits_in_result_hash:  number of bits contained in the output hash (not necessarily equal to words_in_T * 32).
  */
 typedef struct {
-    hmac_ctx_t hmac_ctx;
+    pbkdf2_specific_hmac_ctx_t hmac_ctx;
     unsigned char password[MAX_LENGTH];
     unsigned char salt[MAX_LENGTH];
     uint32_t strlen_password;

@@ -1,8 +1,8 @@
-#include "hmac.h"
+#include "pbkdf2_specific_hmac.h"
 
-/**                         hmac_append_bit_key(hmac_ctx_t*, bit_t);
+/**                         hmac_append_bit_key(ps_pbkdf2_specific_hmac_ctx_t*, bit_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -13,14 +13,14 @@
  *                          HMAC.
  *  @param value:           bit_t type containing the value that needs to be appended in text chunks.
  */
-void hmac_append_bit_key(hmac_ctx_t *ctx, bit_t value) {
-    sha1_append_bit(&ctx->sha1_ctx_key, value);
+void ps_hmac_append_bit_key(pbkdf2_specific_hmac_ctx_t *ctx, bit_t value) {
+    ps_sha1_append_bit(&ctx->sha1_ctx_key, value);
 }
 
 
-/**                         hmac_append_bit_text(hmac_ctx_t*, bit_t);
+/**                         hmac_append_bit_text(pbkdf2_specific_hmac_ctx_t*, bit_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -31,14 +31,14 @@ void hmac_append_bit_key(hmac_ctx_t *ctx, bit_t value) {
  *                          HMAC.
  *  @param value:           bit_t type containing the value that needs to be appended in text chunks.
  */
-void hmac_append_bit_text(hmac_ctx_t *ctx, bit_t value) {
-    sha1_append_bit(&ctx->sha1_ctx_text, value);
+void ps_hmac_append_bit_text(pbkdf2_specific_hmac_ctx_t *ctx, bit_t value) {
+    ps_sha1_append_bit(&ctx->sha1_ctx_text, value);
 }
 
 
-/**                         hmac_append_char_key(hmac_ctx_t*, unsigned char);
+/**                         hmac_append_char_key(pbkdf2_specific_hmac_ctx_t*, unsigned char);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -49,14 +49,14 @@ void hmac_append_bit_text(hmac_ctx_t *ctx, bit_t value) {
  *                          HMAC.
  *  @param value:           byte type containing the value that needs to be appended in key chunks.
  */
-void hmac_append_char_key(hmac_ctx_t *ctx, unsigned char value) {
-    sha1_append_char(&ctx->sha1_ctx_key, value);
+void ps_hmac_append_char_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char value) {
+    ps_sha1_append_char(&ctx->sha1_ctx_key, value);
 }
 
 
-/**                         hmac_append_char_text(hmac_ctx_t*, unsigned char);
+/**                         hmac_append_char_text(pbkdf2_specific_hmac_ctx_t*, unsigned char);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -67,14 +67,14 @@ void hmac_append_char_key(hmac_ctx_t *ctx, unsigned char value) {
  *                          HMAC.
  *  @param value:           byte type containing the value that needs to be appended in text chunks.
  */
-void hmac_append_char_text(hmac_ctx_t *ctx, unsigned char value) {
-    sha1_append_char(&ctx->sha1_ctx_text, value);
+void ps_hmac_append_char_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char value) {
+    ps_sha1_append_char(&ctx->sha1_ctx_text, value);
 }
 
 
-/**                         hmac_append_str_key(hmac_ctx_t*, unsigned char*, uint32_t);
+/**                         hmac_append_str_key(pbkdf2_specific_hmac_ctx_t*, unsigned char*, uint32_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -86,14 +86,14 @@ void hmac_append_char_text(hmac_ctx_t *ctx, unsigned char value) {
  *  @param value:           string that needs to be appended in key chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void hmac_append_str_key(hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
-    sha1_append_str(&ctx->sha1_ctx_key, value, strlen);
+void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+    ps_sha1_append_str(&ctx->sha1_ctx_key, value, strlen);
 }
 
 
-/**                         hmac_append_str_text(hmac_ctx_t*, unsigned char*, uint32_t);
+/**                         hmac_append_str_text(pbkdf2_specific_hmac_ctx_t*, unsigned char*, uint32_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -105,14 +105,14 @@ void hmac_append_str_key(hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen)
  *  @param value:           string that needs to be appended in text chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void hmac_append_str_text(hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
-    sha1_append_str(&ctx->sha1_ctx_text, value, strlen);
+void ps_hmac_append_str_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+    ps_sha1_append_str(&ctx->sha1_ctx_text, value, strlen);
 }
 
 
-/**                         hmac_append_int_key(hmac_ctx_t*, uint32_t);
+/**                         hmac_append_int_key(pbkdf2_specific_hmac_ctx_t*, uint32_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -123,14 +123,14 @@ void hmac_append_str_text(hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen
  *                          HMAC.
  *  @param value:           32 bit integer value that needs to be appended in key chunks.
  */
-void hmac_append_int_key(hmac_ctx_t *ctx, uint32_t value) {
-    sha1_append_int(&ctx->sha1_ctx_key, value);
+void ps_hmac_append_int_key(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t value) {
+    ps_sha1_append_int(&ctx->sha1_ctx_key, value);
 }
 
 
-/**                         hmac_append_int_text(hmac_ctx_t*, uint32_t);
+/**                         hmac_append_int_text(pbkdf2_specific_hmac_ctx_t*, uint32_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -141,14 +141,14 @@ void hmac_append_int_key(hmac_ctx_t *ctx, uint32_t value) {
  *                          HMAC.
  *  @param value:           32 bit integer value that needs to be appended in text chunks.
  */
-void hmac_append_int_text(hmac_ctx_t *ctx, uint32_t value) {
-    sha1_append_int(&ctx->sha1_ctx_text, value);
+void ps_hmac_append_int_text(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t value) {
+    ps_sha1_append_int(&ctx->sha1_ctx_text, value);
 }
 
 
-/**                         hmac_append_long_key(hmac_ctx_t*, uint64_t);
+/**                         hmac_append_long_key(pbkdf2_specific_hmac_ctx_t*, uint64_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -159,14 +159,14 @@ void hmac_append_int_text(hmac_ctx_t *ctx, uint32_t value) {
  *                          HMAC.
  *  @param value:           64 bit integer value that needs to be appended in key chunks.
  */
-void hmac_append_long_key(hmac_ctx_t *ctx, uint64_t value) {
-    sha1_append_long(&ctx->sha1_ctx_key, value);
+void ps_hmac_append_long_key(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value) {
+    ps_sha1_append_long(&ctx->sha1_ctx_key, value);
 }
 
 
-/**                         hmac_append_long_text(hmac_ctx_t*, uint64_t);
+/**                         hmac_append_long_text(pbkdf2_specific_hmac_ctx_t*, uint64_t);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -177,14 +177,14 @@ void hmac_append_long_key(hmac_ctx_t *ctx, uint64_t value) {
  *                          HMAC.
  *  @param value:           64 bit integer value that needs to be appended in text chunks.
  */
-void hmac_append_long_text(hmac_ctx_t *ctx, uint64_t value) {
-    sha1_append_long(&ctx->sha1_ctx_text, value);
+void ps_hmac_append_long_text(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value) {
+    ps_sha1_append_long(&ctx->sha1_ctx_text, value);
 }
 
 
-/**                         [Private] hmac_pad(hmac_ctx_t*);
+/**                         [Private] hmac_pad(pbkdf2_specific_hmac_ctx_t*);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -193,15 +193,15 @@ void hmac_append_long_text(hmac_ctx_t *ctx, uint64_t value) {
  *
  *  @param ctx: sha1_ctx_t struct whose chunks need to be padded according to the HMAC algorithm.
  */
-void hmac_pad(sha1_ctx_t *ctx) {
+void ps_hmac_pad(pbkdf2_specific_sha1_ctx_t *ctx) {
     uint64_t cap = BITS_IN_CHUNK - (ctx->word_counter * SHA1_BIT_COUNTER_INIT + (32 - ctx->counter));
 
     for (uint32_t i = 0; i < cap; i++) {
-        sha1_append_bit(ctx, 0);
+        ps_sha1_append_bit(ctx, 0);
     }
 }
 
-/**                         [Private] hmac_ctx_key_init(hmac_ctx_t*, uint32_t);
+/**                         [Private] hmac_ctx_key_init(pbkdf2_specific_hmac_ctx_t*, uint32_t);
  *
  *  Requires:               []
  *
@@ -210,17 +210,17 @@ void hmac_pad(sha1_ctx_t *ctx) {
  *  Description:            Utility function that initializes sha1_ctx_key with the correct amount of chunks based on how
  *                          many bits we need to write in it.
  *
- *  @param ctx:             hmac_ctx_t struct that wraps the sha1_ctx_key struct passed to the wrapped function
+ *  @param ctx:             pbkdf2_specific_hmac_ctx_t struct that wraps the sha1_ctx_key struct passed to the wrapped function
  *                          sha1_ctx_init.
  *  @param bits_to_be_written_in_key: number of bits that have to be written in key chunks (meaning the number of bits
  *                          that you need to encode the key parameter).
  */
-void hmac_ctx_key_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key) {
-    sha1_ctx_init(&ctx->sha1_ctx_key, (bits_to_be_written_in_key + 1 + 64) / BITS_IN_CHUNK + 1);
+void ps_hmac_ctx_key_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key) {
+    ps_sha1_ctx_init(&ctx->sha1_ctx_key, (bits_to_be_written_in_key + 1 + 64) / BITS_IN_CHUNK + 1);
 }
 
 
-/**                         [Private] hmac_ctx_text_init(hmac_ctx_t*, uint32_t);
+/**                         [Private] pbkdf2_specific_hmac_ctx_text_init(pbkdf2_specific_hmac_ctx_t*, uint32_t);
  *
  *  Requires:               []
  *
@@ -229,17 +229,17 @@ void hmac_ctx_key_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key) {
  *  Description:            Utility function that initializes sha1_ctx_text with the correct amount of chunks based on how
  *                          many bits we need to write in it.
  *
- *  @param ctx:             hmac_ctx_t struct that wraps the sha1_ctx_text struct passed to the wrapped function
+ *  @param ctx:             pbkdf2_specific_hmac_ctx_t struct that wraps the sha1_ctx_text struct passed to the wrapped function
  *                          sha1_ctx_init.
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void hmac_ctx_text_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_text) {
-    sha1_ctx_init(&ctx->sha1_ctx_text, (bits_to_be_written_in_text + 1 + 64) / BITS_IN_CHUNK + 1 + 1);
+void ps_hmac_ctx_text_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_text) {
+    ps_sha1_ctx_init(&ctx->sha1_ctx_text, (bits_to_be_written_in_text + 1 + 64) / BITS_IN_CHUNK + 1 + 1);
     ctx->sha1_ctx_text.chunk_counter += 1;
 }
 
-/**                         [Private] hmac_ctx_reset_pad_words(hmac_ctx_t*);
+/**                         [Private] hmac_ctx_reset_pad_words(pbkdf2_specific_hmac_ctx_t*);
  *
  *  Requires:               []
  *
@@ -249,7 +249,7 @@ void hmac_ctx_text_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_text) {
  *
  *  @param ctx:             hmac context struct that wraps inner_pad and outer_pad.
  */
-void hmac_ctx_reset_pad_words(hmac_ctx_t *ctx) {
+void hmac_ctx_reset_pad_words(pbkdf2_specific_hmac_ctx_t *ctx) {
     ctx->inner_pad.words[0] = 0;
     ctx->inner_pad.words[1] = 0;
     ctx->inner_pad.words[2] = 0;
@@ -285,13 +285,12 @@ void hmac_ctx_reset_pad_words(hmac_ctx_t *ctx) {
     ctx->outer_pad.words[15] = 0;
 }
 
-/**                         hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+/**                         hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Requires:               []
  *
  *  Allows:                 All append functions
- *                          - hmac(hmac_ctx_t*);
- *                          - hmac_ctx_dispose(hmac_ctx_t*);
+ *                          - hmac(pbkdf2_specific_hmac_ctx_t*);
  *
  *  Description:            Wrapper function that correctly initializes the whole hmac context's key and text chunks.
  *
@@ -301,64 +300,15 @@ void hmac_ctx_reset_pad_words(hmac_ctx_t *ctx) {
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void hmac_ctx_init(hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text) {
-    hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
-    hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
+void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text) {
+    ps_hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
+    ps_hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
     hmac_ctx_reset_pad_words(ctx);
 }
 
-
-/**                         [Private] hmac_ctx_key_dispose(hmac_ctx_t*);
+/**                         hmac(pbkdf2_specific_hmac_ctx_t*);
  *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
- *
- *  Allows:                 []
- *
- *  Description:            Wrapper utility function that calls sha1_ctx_dispose in order to dispose key context's chunks.
- *
- *  @param ctx:             hmac context that holds sha1_ctx_t structure that holds, itself, the chunks that need to be
- *                          disposed
- */
-void hmac_ctx_key_dispose(hmac_ctx_t *ctx) {
-    sha1_ctx_dispose(&ctx->sha1_ctx_key);
-}
-
-
-/**                         [Private] hmac_ctx_text_dispose(hmac_ctx_t*);
- *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
- *
- *  Allows:                 []
- *
- *  Description:            Wrapper utility function that calls sha1_ctx_dispose in order to dispose text context's chunks.
- *
- *  @param ctx:             hmac context that holds sha1_ctx_t structure that holds, itself, the chunks that need to be
- *                          disposed
- */
-void hmac_ctx_text_dispose(hmac_ctx_t *ctx) {
-    sha1_ctx_dispose(&ctx->sha1_ctx_text);
-}
-
-
-/**                         hmac_ctx_dispose(hmac_ctxt*);
- *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
- *
- *  Allows:                 []
- *
- *  Description:            Wrapping function that disposes both key and text chunks.-
- *
- *  @param ctx:             hmac context that holds both sha1_ctx_t structures, the key one and the text one, that hold,
- *                          themselves, the chunks that need to be disposed.
- */
-void hmac_ctx_dispose(hmac_ctx_t *ctx) {
-    hmac_ctx_text_dispose(ctx);
-    hmac_ctx_key_dispose(ctx);
-}
-
-/**                         hmac(hmac_ctx_t*);
- *
- *  Requires:               - hmac_ctx_init(hmac_ctx_t*, uint64_t, uint64_t);
+ *  Requires:               - hmac_ctx_init(pbkdf2_specific_hmac_ctx_t*, uint64_t, uint64_t);
  *
  *  Allows:                 []
  *
@@ -366,9 +316,9 @@ void hmac_ctx_dispose(hmac_ctx_t *ctx) {
  *                          produce the Message Authentication Code. Comments inside the function define each step the
  *                          algorithm needs to go through.
  *
- *  @param ctx:             hmac_ctx_t structure that holds every variable needed for the execution as seen in hmac.h
+ *  @param ctx:             pbkdf2_specific_hmac_ctx_t structure that holds every variable needed for the execution as seen in hmac.h
  */
-void hmac(hmac_ctx_t *ctx) {
+void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
     uint8_t temp_counter, temp_word_counter;
     uint64_t temp_chunk_counter;
     uint64_t bits_written_in_key, bits_written_in_text;
@@ -388,16 +338,15 @@ void hmac(hmac_ctx_t *ctx) {
      */
 
     if (bits_written_in_key > BITS_IN_CHUNK) {
-        sha1(&ctx->sha1_ctx_key);
+        ps_sha1(&ctx->sha1_ctx_key);
 
-        sha1_ctx_dispose(&ctx->sha1_ctx_key);
-        sha1_ctx_init(&ctx->sha1_ctx_key, 1);
+        ps_sha1_ctx_init(&ctx->sha1_ctx_key, 1);
 
-        sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[0]);
-        sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[1]);
-        sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[2]);
-        sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[3]);
-        sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
+        ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[0]);
+        ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[1]);
+        ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[2]);
+        ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[3]);
+        ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
     }
 
     /*
@@ -406,7 +355,7 @@ void hmac(hmac_ctx_t *ctx) {
      *              zero bytes x’00’).
      */
 
-    hmac_pad(&ctx->sha1_ctx_key);
+    ps_hmac_pad(&ctx->sha1_ctx_key);
 
     /*
      * Step 4       Exclusive-Or K0 with ipad to produce a B-byte string: K0 xor ipad.
@@ -456,37 +405,37 @@ void hmac(hmac_ctx_t *ctx) {
     temp_word_counter = ctx->sha1_ctx_text.word_counter;
     temp_chunk_counter = ctx->sha1_ctx_text.chunk_counter;
 
-    sha1_ctx_reset_counters(&ctx->sha1_ctx_text);
+    ps_sha1_ctx_reset_counters(&ctx->sha1_ctx_text);
 
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[0]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[1]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[2]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[3]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[4]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[5]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[6]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[7]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[8]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[9]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[10]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[11]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[12]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[13]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[14]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[15]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[0]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[1]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[2]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[3]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[4]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[5]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[6]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[7]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[8]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[9]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[10]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[11]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[12]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[13]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[14]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->inner_pad.words[15]);
 
     ctx->sha1_ctx_text.num_of_chunks = (bits_written_in_text + 64) / BITS_IN_CHUNK + 1;
     ctx->sha1_ctx_text.counter = temp_counter;
     ctx->sha1_ctx_text.word_counter = temp_word_counter;
     ctx->sha1_ctx_text.chunk_counter = temp_chunk_counter;
 
-    sha1_ctx_finalize(&ctx->sha1_ctx_text);
+    ps_sha1_ctx_finalize(&ctx->sha1_ctx_text);
 
     /*
      * Step 6       Apply H to the stream generated in step 5: H((K0 xor ipad) || text).
      */
 
-    sha1(&ctx->sha1_ctx_text);
+    ps_sha1(&ctx->sha1_ctx_text);
 
     ctx->digest[0] = ctx->sha1_ctx_text.digest[0];
     ctx->digest[1] = ctx->sha1_ctx_text.digest[1];
@@ -494,45 +443,44 @@ void hmac(hmac_ctx_t *ctx) {
     ctx->digest[3] = ctx->sha1_ctx_text.digest[3];
     ctx->digest[4] = ctx->sha1_ctx_text.digest[4];
 
-    sha1_ctx_dispose(&ctx->sha1_ctx_text);
-    sha1_ctx_init(&ctx->sha1_ctx_text, 2);
+    ps_sha1_ctx_init(&ctx->sha1_ctx_text, 2);
 
     /*
      * Step 8       Append the result from step 6 to step 7:
      *              (K0 xor opad) || H((K0 xor ipad) || text).
      */
 
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[0]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[1]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[2]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[3]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[4]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[5]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[6]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[7]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[8]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[9]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[10]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[11]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[12]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[13]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[14]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[15]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[0]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[1]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[2]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[3]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[4]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[5]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[6]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[7]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[8]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[9]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[10]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[11]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[12]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[13]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[14]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->outer_pad.words[15]);
 
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[0]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[1]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[2]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[3]);
-    sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[4]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[0]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[1]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[2]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[3]);
+    ps_sha1_append_int(&ctx->sha1_ctx_text, ctx->digest[4]);
 
-    sha1_ctx_finalize(&ctx->sha1_ctx_text);
+    ps_sha1_ctx_finalize(&ctx->sha1_ctx_text);
 
     /*
      * Step 9       Apply H to the result from step 8:
      *              H((K0 xor opad )|| H((K0 xor ipad) || text))
      */
 
-    sha1(&ctx->sha1_ctx_text);
+    ps_sha1(&ctx->sha1_ctx_text);
 
     ctx->digest[0] = ctx->sha1_ctx_text.digest[0];
     ctx->digest[1] = ctx->sha1_ctx_text.digest[1];
@@ -540,39 +488,3 @@ void hmac(hmac_ctx_t *ctx) {
     ctx->digest[3] = ctx->sha1_ctx_text.digest[3];
     ctx->digest[4] = ctx->sha1_ctx_text.digest[4];
 }
-
-/** Example Main
- *
- * hmac_sha1("Key", "Text");
- * └- HMAC -→ 9b31ae2e c98fb87c ee39f48b 38b4b0ea 6151e02b
- *
- * hmac_sha1("key", "The quick brown fox jumps over the lazy dog");
- * └- HMAC -→ de7c9b85 b8b78aa6 bc8a7a36 f70a9070 1c9db4d9
- *
- * hmac_sha1("ciao", "The quick brown fox jumps over the lazy dog");
- * └- HMAC -→ 4845858e 85c82bd1 b01478eb 358d11b5 38647268
- *
- */
-/*
-int main()
-{
-    uint32_t i;
-    char key[] = "ciao";
-    char text[] = "The quick brown fox jumps over the lazy dog";
-    hmac_ctx_t ctx;
-
-    hmac_ctx_init(&ctx, strlen(key) * 8, strlen(text) * 8);
-
-    for(i = 0; i < strlen(key); i++)
-        hmac_append_char_key(&ctx, key[i]);
-
-    for(i = 0; i < strlen(text); i++)
-        hmac_append_char_text(&ctx, text[i]);
-
-    hmac(&ctx);
-
-    hmac_ctx_dispose(&ctx);
-
-    printf("Digest: %08x %08x %08x %08x %08x\n", ctx.digest[0], ctx.digest[1], ctx.digest[2], ctx.digest[3], ctx.digest[4]);
-}
-*/

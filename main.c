@@ -1,4 +1,5 @@
-#include "src/pbkdf2.h"
+#include "src/wpa2_specific_hmac.h"
+#include "src/pbkdf2/pbkdf2.h"
 #include "cap2hccapx/cap2hccapx.h"
 #include <string.h>
 
@@ -241,7 +242,7 @@ hccapx_t process_cap_file(int argc, char **argv) {
  * @param hccapx:           Hccapx struct that holds the eapol MIC that has to be compared to the one in the Hmac context.
  * @return:                 bit_t boolean type, true if the MICs correspond, false if they don't.
  */
-bit_t verify_mic(hmac_ctx_t *hmac_ctx, hccapx_t *hccapx) {
+bit_t verify_mic(wpa2_specific_hmac_ctx_t *hmac_ctx, hccapx_t *hccapx) {
 
     if ((hmac_ctx->digest[0] >> 24 & 0x000000ff) != hccapx->keymic[0]) return false;
     if ((hmac_ctx->digest[0] >> 16 & 0x000000ff) != hccapx->keymic[1]) return false;
@@ -273,7 +274,7 @@ int main(int argc, char **argv) {
 
     hccapx_t hccapx;
     pbkdf2_ctx_t ctx;
-    hmac_ctx_t hmac_ctx;
+    wpa2_specific_hmac_ctx_t hmac_ctx;
 
     uint32_t strlen_password, strlen_salt;
     unsigned char password[MAX_LENGTH];
@@ -329,26 +330,26 @@ int main(int argc, char **argv) {
              *
              * For a total of 100 bytes, 800 bits
              */
-            hmac_ctx_init(&hmac_ctx, 256, 800);
+            ws_hmac_ctx_init(&hmac_ctx, 256, 800);
 
-            hmac_append_int_key(&hmac_ctx, ctx.T[0]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[1]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[2]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[3]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[4]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[5]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[6]);
-            hmac_append_int_key(&hmac_ctx, ctx.T[7]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[0]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[1]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[2]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[3]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[4]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[5]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[6]);
+            ws_hmac_append_int_key(&hmac_ctx, ctx.T[7]);
 
-            hmac_append_str_text(&hmac_ctx, (unsigned char *) "Pairwise key expansion", 22);
-            hmac_append_char_text(&hmac_ctx, 0x00);
-            hmac_append_str_text(&hmac_ctx, min(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
-            hmac_append_str_text(&hmac_ctx, max(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
-            hmac_append_str_text(&hmac_ctx, min(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
-            hmac_append_str_text(&hmac_ctx, max(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
-            hmac_append_char_text(&hmac_ctx, 0x00);
+            ws_hmac_append_str_text(&hmac_ctx, (unsigned char *) "Pairwise key expansion", 22);
+            ws_hmac_append_char_text(&hmac_ctx, 0x00);
+            ws_hmac_append_str_text(&hmac_ctx, min(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
+            ws_hmac_append_str_text(&hmac_ctx, max(hccapx.mac_ap, hccapx.mac_sta, 6), 6);
+            ws_hmac_append_str_text(&hmac_ctx, min(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
+            ws_hmac_append_str_text(&hmac_ctx, max(hccapx.nonce_ap, hccapx.nonce_sta, 32), 32);
+            ws_hmac_append_char_text(&hmac_ctx, 0x00);
 
-            hmac(&hmac_ctx);
+            ws_hmac(&hmac_ctx);
 
             /* Printing Key Confirmation Key, calculated truncating the Pairwise Transient Key, calculated via hmac_sha1
             using the protocol defined above. */
@@ -358,19 +359,17 @@ int main(int argc, char **argv) {
 //            printf("+-------------------------------------------------------------------------+\n");
 
 
-            hmac_ctx_dispose(&hmac_ctx);
 
-            hmac_ctx_init(&hmac_ctx, 128, hccapx.eapol_len * 8);
+            ws_hmac_ctx_init(&hmac_ctx, 128, hccapx.eapol_len * 8);
 
-            hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[0]);
-            hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[1]);
-            hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[2]);
-            hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[3]);
+            ws_hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[0]);
+            ws_hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[1]);
+            ws_hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[2]);
+            ws_hmac_append_int_key(&hmac_ctx, hmac_ctx.digest[3]);
 
-            hmac_append_str_text(&hmac_ctx, hccapx.eapol, hccapx.eapol_len);
+            ws_hmac_append_str_text(&hmac_ctx, hccapx.eapol, hccapx.eapol_len);
 
-            hmac(&hmac_ctx);
-
+            ws_hmac(&hmac_ctx);
 
             /* Printing Message Integrity Code, calculated via hmac_sha1, processing the whole eapol message using KCK as Key */
 //
@@ -382,8 +381,6 @@ int main(int argc, char **argv) {
                 printf("Password found: \"%s\"\n", password);
                 exit(0);
             }
-
-            hmac_ctx_dispose(&hmac_ctx);
         }
         printf("None of the tested passwords matches...\n");
         fclose(wordlist);
