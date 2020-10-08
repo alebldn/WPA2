@@ -301,7 +301,8 @@ void ws_hmac_ctx_reset_pad_words(wpa2_specific_hmac_ctx_t *ctx) {
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text) {
+void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
+                      uint32_t bits_to_be_written_in_text) {
     ws_hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
     ws_hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
     ws_hmac_ctx_reset_pad_words(ctx);

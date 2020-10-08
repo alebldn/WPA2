@@ -300,7 +300,8 @@ void hmac_ctx_reset_pad_words(pbkdf2_specific_hmac_ctx_t *ctx) {
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text) {
+void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
+                      uint32_t bits_to_be_written_in_text) {
     ps_hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
     ps_hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
     hmac_ctx_reset_pad_words(ctx);

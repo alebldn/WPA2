@@ -50,7 +50,8 @@ void ws_hmac_append_long_key(wpa2_specific_hmac_ctx_t *ctx, uint64_t value);
 
 void ws_hmac_append_long_text(wpa2_specific_hmac_ctx_t *ctx, uint64_t value);
 
-void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text);
+void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
+                      uint32_t bits_to_be_written_in_text);
 
 void ws_hmac(wpa2_specific_hmac_ctx_t *ctx);
 

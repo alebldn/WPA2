@@ -291,8 +291,9 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
             w[word_index] = ctx->chunks[chunk_index].words[word_index];
 
         for (; word_index < 80; word_index++)
-            w[word_index] = ws_rotate_left(w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],
-                                        1);
+            w[word_index] = ws_rotate_left(
+                    w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],
+                    1);
 
         a = h0;
         b = h1;

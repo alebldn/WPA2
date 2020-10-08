@@ -267,6 +267,8 @@ bit_t verify_mic(wpa2_specific_hmac_ctx_t *hmac_ctx, hccapx_t *hccapx) {
     return true;
 }
 
+/* TODO: mega optimize sha1 */
+
 /** Main Function           ./wpa2 <cap_file> <wordlist_file> [Essid Filter] */
 int main(int argc, char **argv) {
 
@@ -278,7 +280,7 @@ int main(int argc, char **argv) {
 
     uint32_t strlen_password, strlen_salt;
     unsigned char password[MAX_LENGTH];
-    char* carriage_return;
+    char *carriage_return;
 
     check_arguments(argc, argv);
 
@@ -291,8 +293,7 @@ int main(int argc, char **argv) {
 
             /* Carriage Return substitution with EOL */
             carriage_return = strchr(password, '\n');
-            if (carriage_return)
-            {
+            if (carriage_return) {
                 *carriage_return = '\0';
             }
 

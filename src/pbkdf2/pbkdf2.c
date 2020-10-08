@@ -34,7 +34,7 @@ void pbkdf2_ctx_init(pbkdf2_ctx_t *ctx) {
  */
 void pbkdf2(pbkdf2_ctx_t *ctx) {
 
-    uint32_t  i;
+    uint32_t i;
 
     for (i = 0; i < WORDS_IN_T; i++) {
         ctx->T[i] = 0;

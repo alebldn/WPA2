@@ -6,7 +6,7 @@
 
 /** Defines */
 /** Chunks necessary for WPA2-HMAC */
-#define CHUNKS                          2
+#define WPA2_CHUNKS                 6
 
 /**
  * Definition of the structure sha1_ctx_t: containing
@@ -26,7 +26,7 @@
  *                          within a single word, not globally.
  */
 typedef struct {
-    chunk_t chunks[CHUNKS];
+    chunk_t chunks[WPA2_CHUNKS];
     uint32_t digest[WORDS_IN_HASH];
     uint64_t num_of_chunks;
     uint64_t chunk_counter;

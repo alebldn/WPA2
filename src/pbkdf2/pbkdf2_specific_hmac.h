@@ -50,7 +50,8 @@ void ps_hmac_append_long_key(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value);
 
 void ps_hmac_append_long_text(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value);
 
-void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key, uint32_t bits_to_be_written_in_text);
+void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
+                      uint32_t bits_to_be_written_in_text);
 
 void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx);
 

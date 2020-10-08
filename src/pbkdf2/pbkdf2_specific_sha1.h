@@ -6,7 +6,7 @@
 
 /** Defines */
 /** Chunks necessary for WPA2-PBKDF2 */
-#define CHUNKS                          2
+#define PBKDF2_CHUNKS                       2
 
 /**
  * Definition of the structure ps_specific_sha1_ctx_t: containing
@@ -26,7 +26,7 @@
  *                          within a single word, not globally.
  */
 typedef struct {
-    chunk_t chunks[CHUNKS];
+    chunk_t chunks[PBKDF2_CHUNKS];
     uint32_t digest[WORDS_IN_HASH];
     uint64_t num_of_chunks;
     uint64_t chunk_counter;
