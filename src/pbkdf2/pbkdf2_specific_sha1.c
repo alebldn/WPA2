@@ -286,13 +286,12 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
     h4 = H4;
 
     for (chunk_index = 0; chunk_index < ctx->num_of_chunks; chunk_index++) {
+
         for (word_index = 0; word_index < WORDS_IN_CHUNK; word_index++)
             w[word_index] = ctx->chunks[chunk_index].words[word_index];
 
         for (; word_index < 80; word_index++)
-            w[word_index] = ps_rotate_left(
-                    w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],
-                    1);
+            w[word_index] = ps_rotate_left(w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],1);
 
         a = h0;
         b = h1;
