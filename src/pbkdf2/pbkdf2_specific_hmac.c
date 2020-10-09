@@ -86,7 +86,7 @@ void ps_hmac_append_char_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char val
  *  @param value:           string that needs to be appended in key chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen) {
     ps_sha1_append_str(&ctx->sha1_ctx_key, value, strlen);
 }
 
@@ -105,7 +105,7 @@ void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *valu
  *  @param value:           string that needs to be appended in text chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ps_hmac_append_str_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+void ps_hmac_append_str_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen) {
     ps_sha1_append_str(&ctx->sha1_ctx_text, value, strlen);
 }
 
@@ -194,9 +194,9 @@ void ps_hmac_append_long_text(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value) {
  *  @param ctx: sha1_ctx_t struct whose chunks need to be padded according to the HMAC algorithm.
  */
 void ps_hmac_pad(pbkdf2_specific_sha1_ctx_t *ctx) {
-    uint64_t cap = BITS_IN_CHUNK - (ctx->word_counter * SHA1_BIT_COUNTER_INIT + (32 - ctx->counter));
+    uint16_t cap = BITS_IN_CHUNK - (ctx->word_counter * SHA1_BIT_COUNTER_INIT + (32 - ctx->counter));
 
-    for (uint32_t i = 0; i < cap; i++) {
+    for (uint16_t i = 0; i < cap; i++) {
         ps_sha1_append_bit(ctx, 0);
     }
 }
@@ -300,8 +300,8 @@ void hmac_ctx_reset_pad_words(pbkdf2_specific_hmac_ctx_t *ctx) {
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
-                      uint32_t bits_to_be_written_in_text) {
+void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint16_t bits_to_be_written_in_key,
+                      uint16_t bits_to_be_written_in_text) {
     ps_hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
     ps_hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
     hmac_ctx_reset_pad_words(ctx);
@@ -321,12 +321,8 @@ void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_writt
  */
 void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
     uint8_t temp_counter, temp_word_counter;
-    uint64_t temp_chunk_counter;
-    uint64_t bits_written_in_key, bits_written_in_text;
-
-    bits_written_in_key = ctx->sha1_ctx_key.chunk_counter * BITS_IN_CHUNK
-                          + ctx->sha1_ctx_key.word_counter * BITS_IN_WORD
-                          + 32 - ctx->sha1_ctx_key.counter;
+    uint8_t temp_chunk_counter;
+    uint16_t bits_written_in_text;
 
     bits_written_in_text = ctx->sha1_ctx_text.chunk_counter * BITS_IN_CHUNK
                            + ctx->sha1_ctx_text.word_counter * BITS_IN_WORD
@@ -337,10 +333,10 @@ void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
      * Step 2       If the length of K > B: hash K to obtain an L byte string, then append (B-L)
      *              zeros to create a B-byte string K0 (i.e., K0 = H(K) || 00...00). Go to step 4.
      */
+
+
     /* REMOVED: the maximum value in bits_written_in_key is exactly 512 for pbkdf2 (which is exactly equal to the maximum
      * password length (64) multiplied for 8 bits per char. So there's no need for this check.
-
-
     if (bits_written_in_key > BITS_IN_CHUNK) {
         ps_sha1(&ctx->sha1_ctx_key);
 
@@ -353,6 +349,8 @@ void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
         ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
     }
     */
+
+
     /*
      * Step 3       If the length of K < B: append zeros to the end of K to create a B-byte string K0
      *              (e.g., if K is 20 bytes in length and B = 64, then K will be appended with 44

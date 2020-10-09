@@ -38,9 +38,9 @@ void ps_hmac_append_char_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char valu
 
 void ps_hmac_append_char_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char value);
 
-void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen);
+void ps_hmac_append_str_key(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen);
 
-void ps_hmac_append_str_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen);
+void ps_hmac_append_str_text(pbkdf2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen);
 
 void ps_hmac_append_int_key(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t value);
 
@@ -50,8 +50,8 @@ void ps_hmac_append_long_key(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value);
 
 void ps_hmac_append_long_text(pbkdf2_specific_hmac_ctx_t *ctx, uint64_t value);
 
-void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
-                      uint32_t bits_to_be_written_in_text);
+void ps_hmac_ctx_init(pbkdf2_specific_hmac_ctx_t *ctx, uint16_t bits_to_be_written_in_key,
+                      uint16_t bits_to_be_written_in_text);
 
 void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx);
 

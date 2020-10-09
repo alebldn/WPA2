@@ -38,9 +38,9 @@ void ws_hmac_append_char_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char value)
 
 void ws_hmac_append_char_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char value);
 
-void ws_hmac_append_str_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen);
+void ws_hmac_append_str_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen);
 
-void ws_hmac_append_str_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen);
+void ws_hmac_append_str_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen);
 
 void ws_hmac_append_int_key(wpa2_specific_hmac_ctx_t *ctx, uint32_t value);
 
@@ -50,8 +50,8 @@ void ws_hmac_append_long_key(wpa2_specific_hmac_ctx_t *ctx, uint64_t value);
 
 void ws_hmac_append_long_text(wpa2_specific_hmac_ctx_t *ctx, uint64_t value);
 
-void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
-                      uint32_t bits_to_be_written_in_text);
+void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint16_t bits_to_be_written_in_key,
+                      uint16_t bits_to_be_written_in_text);
 
 void ws_hmac(wpa2_specific_hmac_ctx_t *ctx);
 

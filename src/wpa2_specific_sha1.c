@@ -62,8 +62,8 @@ void ws_sha1_append_char(wpa2_specific_sha1_ctx_t *ctx, unsigned char value) {
  *  @param str:             string that has to be appended inside the chunk(s)
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ws_sha1_append_str(wpa2_specific_sha1_ctx_t *ctx, unsigned char *str, uint32_t strlen) {
-    for (uint64_t i = 0; i < strlen; i++) {
+void ws_sha1_append_str(wpa2_specific_sha1_ctx_t *ctx, unsigned char *str, uint16_t strlen) {
+    for (uint8_t i = 0; i < strlen; i++) {
         ws_sha1_append_char(ctx, str[i]);
     }
 }
@@ -162,10 +162,10 @@ uint32_t ws_rotate_right(const uint32_t value, uint32_t shift) {
  *                          amount of zeroes that need to be appended in order to pad the last chunk
  */
 void ws_sha1_pad(wpa2_specific_sha1_ctx_t *ctx) {
-    uint64_t cap = BITS_IN_CHUNK * (ctx->num_of_chunks - ctx->chunk_counter) -
+    uint16_t cap = BITS_IN_CHUNK * (ctx->num_of_chunks - ctx->chunk_counter) -
                    ctx->word_counter * BITS_IN_WORD - BITS_IN_WORD + ctx->counter - 64;
 
-    for (uint64_t i = 0; i < cap; i++) {
+    for (uint16_t i = 0; i < cap; i++) {
         ws_sha1_append_bit(ctx, 0);
     }
 }
@@ -206,17 +206,38 @@ void ws_sha1_ctx_reset_counters(wpa2_specific_sha1_ctx_t *ctx) {
  *  @param num_of_chunks:   number of chunks needed in order to store all the information on which the sha1 algorithm
  *                          has to be applied.
  */
-void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint32_t num_of_chunks) {
-    uint32_t i, j;
+void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint8_t num_of_chunks) {
+    uint8_t i;
 
     ctx->num_of_chunks = num_of_chunks;
 
     for (i = 0; i < ctx->num_of_chunks; i++)
-        for (j = 0; j < WORDS_IN_CHUNK; j++)
-            ctx->chunks[i].words[j] = 0;
+    {
 
-    for (i = 0; i < WORDS_IN_HASH; i++)
-        ctx->digest[i] = 0;
+        ctx->chunks[i].words[0] = 0;
+        ctx->chunks[i].words[1] = 0;
+        ctx->chunks[i].words[2] = 0;
+        ctx->chunks[i].words[3] = 0;
+        ctx->chunks[i].words[4] = 0;
+        ctx->chunks[i].words[5] = 0;
+        ctx->chunks[i].words[6] = 0;
+        ctx->chunks[i].words[7] = 0;
+        ctx->chunks[i].words[8] = 0;
+        ctx->chunks[i].words[9] = 0;
+        ctx->chunks[i].words[10] = 0;
+        ctx->chunks[i].words[11] = 0;
+        ctx->chunks[i].words[12] = 0;
+        ctx->chunks[i].words[13] = 0;
+        ctx->chunks[i].words[14] = 0;
+        ctx->chunks[i].words[15] = 0;
+
+    }
+
+    ctx->digest[0] = 0;
+    ctx->digest[1] = 0;
+    ctx->digest[2] = 0;
+    ctx->digest[3] = 0;
+    ctx->digest[4] = 0;
 
     ws_sha1_ctx_reset_counters(ctx);
 }
@@ -238,7 +259,7 @@ void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint32_t num_of_chunks) {
  *  @param ctx:             structure that holds every parameter needed in order to finalize the data and finally execute the sha1 algorithm
  */
 void ws_sha1_ctx_finalize(wpa2_specific_sha1_ctx_t *ctx) {
-    uint32_t len = ctx->chunk_counter * BITS_IN_CHUNK + ctx->word_counter * BITS_IN_WORD +
+    uint16_t len = ctx->chunk_counter * BITS_IN_CHUNK + ctx->word_counter * BITS_IN_WORD +
                    (SHA1_BIT_COUNTER_INIT - ctx->counter);
 
     ws_sha1_append_bit(ctx, 1);
@@ -258,11 +279,9 @@ void ws_sha1_ctx_finalize(wpa2_specific_sha1_ctx_t *ctx) {
  * @param ctx:              finalized wpa2_specific_sha1_ctx_t structure that holds all the data needed in order to evaluate the hash.
  */
 void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
-    uint32_t w[80];
-    uint32_t a, b, c, d, e;
-    uint32_t h0, h1, h2, h3, h4;
-    uint32_t f, k, temp;
-    int32_t word_index, chunk_index;
+    uint32_t w[WORDS_IN_CHUNK];
+    uint32_t a, b, c, d, e, temp;
+    uint8_t word_index, chunk_index, word_index_mod_16;
 
     /**
      * Pre-processing: append the bit '1' to the message.
@@ -276,26 +295,36 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
      * break message into 512-bit chunks
      */
 
-    h0 = H0;
-    h1 = H1;
-    h2 = H2;
-    h3 = H3;
-    h4 = H4;
+    ctx->digest[0] = H0;
+    ctx->digest[1] = H1;
+    ctx->digest[2] = H2;
+    ctx->digest[3] = H3;
+    ctx->digest[4] = H4;
 
     for (chunk_index = 0; chunk_index < ctx->num_of_chunks; chunk_index++) {
-        for (word_index = 0; word_index < WORDS_IN_CHUNK; word_index++)
-            w[word_index] = ctx->chunks[chunk_index].words[word_index];
 
-        for (; word_index < 80; word_index++)
-            w[word_index] = ws_rotate_left(
-                    w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],
-                    1);
+        w[0] = ctx->chunks[chunk_index].words[0];
+        w[1] = ctx->chunks[chunk_index].words[1];
+        w[2] = ctx->chunks[chunk_index].words[2];
+        w[3] = ctx->chunks[chunk_index].words[3];
+        w[4] = ctx->chunks[chunk_index].words[4];
+        w[5] = ctx->chunks[chunk_index].words[5];
+        w[6] = ctx->chunks[chunk_index].words[6];
+        w[7] = ctx->chunks[chunk_index].words[7];
+        w[8] = ctx->chunks[chunk_index].words[8];
+        w[9] = ctx->chunks[chunk_index].words[9];
+        w[10] = ctx->chunks[chunk_index].words[10];
+        w[11] = ctx->chunks[chunk_index].words[11];
+        w[12] = ctx->chunks[chunk_index].words[12];
+        w[13] = ctx->chunks[chunk_index].words[13];
+        w[14] = ctx->chunks[chunk_index].words[14];
+        w[15] = ctx->chunks[chunk_index].words[15];
 
-        a = h0;
-        b = h1;
-        c = h2;
-        d = h3;
-        e = h4;
+        a = ctx->digest[0];
+        b = ctx->digest[1];
+        c = ctx->digest[2];
+        d = ctx->digest[3];
+        e = ctx->digest[4];
 
         /*
          * Main loop:
@@ -315,18 +344,23 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
          */
 
         for (word_index = 0; word_index < 80; word_index++) {
+
+            word_index_mod_16 = word_index & MASK;
+
+            if(word_index > MASK) {
+                w[word_index_mod_16] = ws_rotate_left(
+                        w[(word_index_mod_16 + 13) & MASK] ^ w[(word_index_mod_16 + 8) & MASK] ^
+                        w[(word_index_mod_16 + 2) & MASK] ^ w[word_index_mod_16], 1);
+            }
+
             if (word_index < 20) {
-                f = ((b & c) ^ ((~b) & d));
-                k = 0x5A827999;
+                temp = ws_rotate_left(a, 5) + e + 0x5A827999 + ((b & c) ^ ((~b) & d)) + w[word_index_mod_16];
             } else if (word_index >= 20 && word_index < 40) {
-                f = (b ^ c ^ d);
-                k = 0x6ED9EBA1;
+                temp = ws_rotate_left(a, 5) + e + 0x6ED9EBA1 + (b ^ c ^ d) + w[word_index_mod_16];
             } else if (word_index >= 40 && word_index < 60) {
-                f = ((b & c) ^ (b & d) ^ (c & d));
-                k = 0x8F1BBCDC;
+                temp = ws_rotate_left(a, 5) + e + 0x8F1BBCDC + ((b & c) ^ (b & d) ^ (c & d)) + w[word_index_mod_16];
             } else if (word_index >= 60 && word_index < 80) {
-                f = (b ^ c ^ d);
-                k = 0xCA62C1D6;
+                temp = ws_rotate_left(a, 5) + e + 0xCA62C1D6 + (b ^ c ^ d) + w[word_index_mod_16];
             }
 
             /*
@@ -337,8 +371,6 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
                 *  b = a
                 *  a = temp
                 */
-
-            temp = ws_rotate_left(a, 5) + e + k + f + w[word_index];
 
             e = d;
             d = c;
@@ -356,16 +388,10 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
          * h4 = h4 + e
          */
 
-        h0 = h0 + a;
-        h1 = h1 + b;
-        h2 = h2 + c;
-        h3 = h3 + d;
-        h4 = h4 + e;
+        ctx->digest[0] = ctx->digest[0] + a;
+        ctx->digest[1] = ctx->digest[1] + b;
+        ctx->digest[2] = ctx->digest[2] + c;
+        ctx->digest[3] = ctx->digest[3] + d;
+        ctx->digest[4] = ctx->digest[4] + e;
     }
-
-    ctx->digest[0] = h0;
-    ctx->digest[1] = h1;
-    ctx->digest[2] = h2;
-    ctx->digest[3] = h3;
-    ctx->digest[4] = h4;
 }

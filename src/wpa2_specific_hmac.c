@@ -86,7 +86,7 @@ void ws_hmac_append_char_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char value
  *  @param value:           string that needs to be appended in key chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ws_hmac_append_str_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+void ws_hmac_append_str_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen) {
     ws_sha1_append_str(&ctx->sha1_ctx_key, value, strlen);
 }
 
@@ -105,7 +105,7 @@ void ws_hmac_append_str_key(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value,
  *  @param value:           string that needs to be appended in text chunks.
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ws_hmac_append_str_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint32_t strlen) {
+void ws_hmac_append_str_text(wpa2_specific_hmac_ctx_t *ctx, unsigned char *value, uint16_t strlen) {
     ws_sha1_append_str(&ctx->sha1_ctx_text, value, strlen);
 }
 
@@ -194,9 +194,9 @@ void ws_hmac_append_long_text(wpa2_specific_hmac_ctx_t *ctx, uint64_t value) {
  *  @param ctx: sha1_ctx_t struct whose chunks need to be padded according to the HMAC algorithm.
  */
 void ws_hmac_pad(wpa2_specific_sha1_ctx_t *ctx) {
-    uint64_t cap = BITS_IN_CHUNK - (ctx->word_counter * SHA1_BIT_COUNTER_INIT + (32 - ctx->counter));
+    uint16_t cap = BITS_IN_CHUNK - (ctx->word_counter * SHA1_BIT_COUNTER_INIT + (32 - ctx->counter));
 
-    for (uint32_t i = 0; i < cap; i++) {
+    for (uint16_t i = 0; i < cap; i++) {
         ws_sha1_append_bit(ctx, 0);
     }
 }
@@ -215,7 +215,7 @@ void ws_hmac_pad(wpa2_specific_sha1_ctx_t *ctx) {
  *  @param bits_to_be_written_in_key: number of bits that have to be written in key chunks (meaning the number of bits
  *                          that you need to encode the key parameter).
  */
-void ws_hmac_ctx_key_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key) {
+void ws_hmac_ctx_key_init(wpa2_specific_hmac_ctx_t *ctx, uint16_t bits_to_be_written_in_key) {
     ws_sha1_ctx_init(&ctx->sha1_ctx_key, (bits_to_be_written_in_key + 1 + 64) / BITS_IN_CHUNK + 1);
 }
 
@@ -301,8 +301,8 @@ void ws_hmac_ctx_reset_pad_words(wpa2_specific_hmac_ctx_t *ctx) {
  *  @param bits_to_be_written_in_text: number of bits that have to be written in text chunks (meaning the number of bits
  *                          that you need to encode the text parameter).
  */
-void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written_in_key,
-                      uint32_t bits_to_be_written_in_text) {
+void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint16_t bits_to_be_written_in_key,
+                      uint16_t bits_to_be_written_in_text) {
     ws_hmac_ctx_key_init(ctx, bits_to_be_written_in_key);
     ws_hmac_ctx_text_init(ctx, bits_to_be_written_in_text);
     ws_hmac_ctx_reset_pad_words(ctx);
@@ -322,12 +322,8 @@ void ws_hmac_ctx_init(wpa2_specific_hmac_ctx_t *ctx, uint32_t bits_to_be_written
  */
 void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
     uint8_t temp_counter, temp_word_counter;
-    uint64_t temp_chunk_counter;
-    uint64_t bits_written_in_key, bits_written_in_text;
-
-    bits_written_in_key = ctx->sha1_ctx_key.chunk_counter * BITS_IN_CHUNK
-                          + ctx->sha1_ctx_key.word_counter * BITS_IN_WORD
-                          + 32 - ctx->sha1_ctx_key.counter;
+    uint8_t temp_chunk_counter;
+    uint16_t bits_written_in_text;
 
     bits_written_in_text = ctx->sha1_ctx_text.chunk_counter * BITS_IN_CHUNK
                            + ctx->sha1_ctx_text.word_counter * BITS_IN_WORD
@@ -338,6 +334,8 @@ void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
      * Step 2       If the length of K > B: hash K to obtain an L byte string, then append (B-L)
      *              zeros to create a B-byte string K0 (i.e., K0 = H(K) || 00...00). Go to step 4.
      */
+
+
     /* REMOVED: the maximum value in bits_written_in_key is 256 for wpa2 (and it has such maximum value when PMK is
      * passed as Key in order to derive the PTK during the Pairwise Key Expansion phase.
 
@@ -353,6 +351,8 @@ void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
         ws_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
     }
     */
+
+
     /*
      * Step 3       If the length of K < B: append zeros to the end of K to create a B-byte string K0
      *              (e.g., if K is 20 bytes in length and B = 64, then K will be appended with 44

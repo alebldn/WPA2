@@ -63,8 +63,8 @@ void ps_sha1_append_char(pbkdf2_specific_sha1_ctx_t *ctx, unsigned char value) {
  *  @param str:             string that has to be appended inside the chunk(s)
  *  @param strlen:          length of the string passed as previous argument.
  */
-void ps_sha1_append_str(pbkdf2_specific_sha1_ctx_t *ctx, unsigned char *str, uint32_t strlen) {
-    for (uint64_t i = 0; i < strlen; i++) {
+void ps_sha1_append_str(pbkdf2_specific_sha1_ctx_t *ctx, unsigned char *str, uint16_t strlen) {
+    for (uint8_t i = 0; i < strlen; i++) {
         ps_sha1_append_char(ctx, str[i]);
     }
 }
@@ -207,17 +207,53 @@ void ps_sha1_ctx_reset_counters(pbkdf2_specific_sha1_ctx_t *ctx) {
  *  @param num_of_chunks:   number of chunks needed in order to store all the information on which the sha1 algorithm
  *                          has to be applied.
  */
-void ps_sha1_ctx_init(pbkdf2_specific_sha1_ctx_t *ctx, uint32_t num_of_chunks) {
-    uint32_t i, j;
+void ps_sha1_ctx_init(pbkdf2_specific_sha1_ctx_t *ctx, uint8_t num_of_chunks) {
 
     ctx->num_of_chunks = num_of_chunks;
 
-    for (i = 0; i < ctx->num_of_chunks; i++)
-        for (j = 0; j < WORDS_IN_CHUNK; j++)
-            ctx->chunks[i].words[j] = 0;
+    ctx->chunks[0].words[0] = 0;
+    ctx->chunks[0].words[1] = 0;
+    ctx->chunks[0].words[2] = 0;
+    ctx->chunks[0].words[3] = 0;
+    ctx->chunks[0].words[4] = 0;
+    ctx->chunks[0].words[5] = 0;
+    ctx->chunks[0].words[6] = 0;
+    ctx->chunks[0].words[7] = 0;
+    ctx->chunks[0].words[8] = 0;
+    ctx->chunks[0].words[9] = 0;
+    ctx->chunks[0].words[10] = 0;
+    ctx->chunks[0].words[11] = 0;
+    ctx->chunks[0].words[12] = 0;
+    ctx->chunks[0].words[13] = 0;
+    ctx->chunks[0].words[14] = 0;
+    ctx->chunks[0].words[15] = 0;
 
-    for (i = 0; i < WORDS_IN_HASH; i++)
-        ctx->digest[i] = 0;
+    if(ctx->num_of_chunks == 2)
+    {
+        ctx->chunks[1].words[0] = 0;
+        ctx->chunks[1].words[1] = 0;
+        ctx->chunks[1].words[2] = 0;
+        ctx->chunks[1].words[3] = 0;
+        ctx->chunks[1].words[4] = 0;
+        ctx->chunks[1].words[5] = 0;
+        ctx->chunks[1].words[6] = 0;
+        ctx->chunks[1].words[7] = 0;
+        ctx->chunks[1].words[8] = 0;
+        ctx->chunks[1].words[9] = 0;
+        ctx->chunks[1].words[10] = 0;
+        ctx->chunks[1].words[11] = 0;
+        ctx->chunks[1].words[12] = 0;
+        ctx->chunks[1].words[13] = 0;
+        ctx->chunks[1].words[14] = 0;
+        ctx->chunks[1].words[15] = 0;
+
+    }
+
+    ctx->digest[0] = 0;
+    ctx->digest[1] = 0;
+    ctx->digest[2] = 0;
+    ctx->digest[3] = 0;
+    ctx->digest[4] = 0;
 
     ps_sha1_ctx_reset_counters(ctx);
 }
@@ -239,7 +275,7 @@ void ps_sha1_ctx_init(pbkdf2_specific_sha1_ctx_t *ctx, uint32_t num_of_chunks) {
  *  @param ctx:             structure that holds every parameter needed in order to finalize the data and finally execute the sha1 algorithm
  */
 void ps_sha1_ctx_finalize(pbkdf2_specific_sha1_ctx_t *ctx) {
-    uint32_t len = ctx->chunk_counter * BITS_IN_CHUNK + ctx->word_counter * BITS_IN_WORD +
+    uint16_t len = ctx->chunk_counter * BITS_IN_CHUNK + ctx->word_counter * BITS_IN_WORD +
                    (SHA1_BIT_COUNTER_INIT - ctx->counter);
 
     ps_sha1_append_bit(ctx, 1);
@@ -259,8 +295,7 @@ void ps_sha1_ctx_finalize(pbkdf2_specific_sha1_ctx_t *ctx) {
  */
 void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
     uint32_t w[WORDS_IN_CHUNK];
-    uint32_t a, b, c, d, e;
-    uint32_t f, k, temp;
+    uint32_t a, b, c, d, e, temp;
     uint8_t word_index, chunk_index, word_index_mod_16;
 
     /**
@@ -283,8 +318,22 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
 
     for (chunk_index = 0; chunk_index < ctx->num_of_chunks; chunk_index++) {
 
-        for (word_index = 0; word_index < WORDS_IN_CHUNK; word_index++)
-            w[word_index] = ctx->chunks[chunk_index].words[word_index];
+        w[0] = ctx->chunks[chunk_index].words[0];
+        w[1] = ctx->chunks[chunk_index].words[1];
+        w[2] = ctx->chunks[chunk_index].words[2];
+        w[3] = ctx->chunks[chunk_index].words[3];
+        w[4] = ctx->chunks[chunk_index].words[4];
+        w[5] = ctx->chunks[chunk_index].words[5];
+        w[6] = ctx->chunks[chunk_index].words[6];
+        w[7] = ctx->chunks[chunk_index].words[7];
+        w[8] = ctx->chunks[chunk_index].words[8];
+        w[9] = ctx->chunks[chunk_index].words[9];
+        w[10] = ctx->chunks[chunk_index].words[10];
+        w[11] = ctx->chunks[chunk_index].words[11];
+        w[12] = ctx->chunks[chunk_index].words[12];
+        w[13] = ctx->chunks[chunk_index].words[13];
+        w[14] = ctx->chunks[chunk_index].words[14];
+        w[15] = ctx->chunks[chunk_index].words[15];
 
         a = ctx->digest[0];
         b = ctx->digest[1];
@@ -320,17 +369,13 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
             }
 
             if (word_index < 20) {
-                f = ((b & c) ^ ((~b) & d));
-                k = 0x5A827999;
+                temp = ps_rotate_left(a, 5) + e + 0x5A827999 + ((b & c) ^ ((~b) & d)) + w[word_index_mod_16];
             } else if (word_index >= 20 && word_index < 40) {
-                f = (b ^ c ^ d);
-                k = 0x6ED9EBA1;
+                temp = ps_rotate_left(a, 5) + e + 0x6ED9EBA1 + (b ^ c ^ d) + w[word_index_mod_16];
             } else if (word_index >= 40 && word_index < 60) {
-                f = ((b & c) ^ (b & d) ^ (c & d));
-                k = 0x8F1BBCDC;
+                temp = ps_rotate_left(a, 5) + e + 0x8F1BBCDC + ((b & c) ^ (b & d) ^ (c & d)) + w[word_index_mod_16];
             } else if (word_index >= 60 && word_index < 80) {
-                f = (b ^ c ^ d);
-                k = 0xCA62C1D6;
+                temp = ps_rotate_left(a, 5) + e + 0xCA62C1D6 + (b ^ c ^ d) + w[word_index_mod_16];
             }
 
             /*
@@ -341,8 +386,6 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
                 *  b = a
                 *  a = temp
                 */
-
-            temp = ps_rotate_left(a, 5) + e + k + f + w[word_index_mod_16];
 
             e = d;
             d = c;

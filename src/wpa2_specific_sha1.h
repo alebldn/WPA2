@@ -43,7 +43,7 @@ void ws_sha1_append_int(wpa2_specific_sha1_ctx_t *ctx, uint32_t value);
 
 void ws_sha1_append_long(wpa2_specific_sha1_ctx_t *ctx, uint64_t value);
 
-void ws_sha1_append_str(wpa2_specific_sha1_ctx_t *ctx, unsigned char *str, uint32_t strlen);
+void ws_sha1_append_str(wpa2_specific_sha1_ctx_t *ctx, unsigned char *str, uint16_t strlen);
 
 uint32_t ws_rotate_left(uint32_t value, uint32_t shift);
 
@@ -51,7 +51,7 @@ uint32_t ws_rotate_right(uint32_t value, uint32_t shift);
 
 void ws_sha1(wpa2_specific_sha1_ctx_t *ctx);
 
-void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint32_t num_of_chunks);
+void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint8_t num_of_chunks);
 
 void ws_sha1_ctx_finalize(wpa2_specific_sha1_ctx_t *ctx);
 
