@@ -337,6 +337,9 @@ void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
      * Step 2       If the length of K > B: hash K to obtain an L byte string, then append (B-L)
      *              zeros to create a B-byte string K0 (i.e., K0 = H(K) || 00...00). Go to step 4.
      */
+    /* REMOVED: the maximum value in bits_written_in_key is exactly 512 for pbkdf2 (which is exactly equal to the maximum
+     * password length (64) multiplied for 8 bits per char. So there's no need for this check.
+
 
     if (bits_written_in_key > BITS_IN_CHUNK) {
         ps_sha1(&ctx->sha1_ctx_key);
@@ -349,7 +352,7 @@ void ps_hmac(pbkdf2_specific_hmac_ctx_t *ctx) {
         ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[3]);
         ps_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
     }
-
+    */
     /*
      * Step 3       If the length of K < B: append zeros to the end of K to create a B-byte string K0
      *              (e.g., if K is 20 bytes in length and B = 64, then K will be appended with 44

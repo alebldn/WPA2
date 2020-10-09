@@ -338,6 +338,8 @@ void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
      * Step 2       If the length of K > B: hash K to obtain an L byte string, then append (B-L)
      *              zeros to create a B-byte string K0 (i.e., K0 = H(K) || 00...00). Go to step 4.
      */
+    /* REMOVED: the maximum value in bits_written_in_key is 256 for wpa2 (and it has such maximum value when PMK is
+     * passed as Key in order to derive the PTK during the Pairwise Key Expansion phase.
 
     if (bits_written_in_key > BITS_IN_CHUNK) {
         ws_sha1(&ctx->sha1_ctx_key);
@@ -350,7 +352,7 @@ void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
         ws_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[3]);
         ws_sha1_append_int(&ctx->sha1_ctx_key, ctx->sha1_ctx_key.digest[4]);
     }
-
+    */
     /*
      * Step 3       If the length of K < B: append zeros to the end of K to create a B-byte string K0
      *              (e.g., if K is 20 bytes in length and B = 64, then K will be appended with 44
