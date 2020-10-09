@@ -33,6 +33,9 @@
 /** Number of words in sha1 hash digest */
 #define WORDS_IN_HASH                   5
 
+/** Mask for fast modulo 16 calculations */
+#define MASK                            0x0000000f
+
 /** Constant words defined as dictated in SHA1 algorithm */
 #define H0                             0x67452301;
 #define H1                             0xEFCDAB89;

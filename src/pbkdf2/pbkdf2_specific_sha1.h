@@ -47,7 +47,7 @@ void ps_sha1_append_str(pbkdf2_specific_sha1_ctx_t *ctx, unsigned char *str, uin
 
 uint32_t ps_rotate_left(uint32_t value, uint32_t shift);
 
-uint32_t rotate_right(uint32_t value, uint32_t shift);
+uint32_t ps_rotate_right(uint32_t value, uint32_t shift);
 
 void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx);
 

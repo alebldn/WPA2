@@ -126,10 +126,11 @@ void ps_sha1_append_long(pbkdf2_specific_sha1_ctx_t *ctx, uint64_t value) {
  *  @param shift:           value of the rotation (max should be 31 bit).
  *  @return:                rotated uint32_t word.
  */
+ /** TODO: Delete if check */
 uint32_t ps_rotate_left(const uint32_t value, uint32_t shift) {
-    if ((shift &= sizeof(value) * 8 - 1) == 0)
+    if ((shift &= 31) == 0)
         return value;
-    return (value << shift) | (value >> (sizeof(value) * 8 - shift));
+    return (value << shift) | (value >> (32 - shift));
 }
 
 
@@ -261,11 +262,10 @@ void ps_sha1_ctx_finalize(pbkdf2_specific_sha1_ctx_t *ctx) {
  * @param ctx:              finalized pbkdf2_specific_sha1_ctx_t structure that holds all the data needed in order to evaluate the hash.
  */
 void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
-    uint32_t w[80];
+    uint32_t w[WORDS_IN_CHUNK];
     uint32_t a, b, c, d, e;
-    uint32_t h0, h1, h2, h3, h4;
     uint32_t f, k, temp;
-    int32_t word_index, chunk_index;
+    uint8_t word_index, chunk_index, word_index_mod_16;
 
     /**
      * Pre-processing: append the bit '1' to the message.
@@ -279,25 +279,22 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
      * break message into 512-bit chunks
      */
 
-    h0 = H0;
-    h1 = H1;
-    h2 = H2;
-    h3 = H3;
-    h4 = H4;
+    ctx->digest[0] = H0;
+    ctx->digest[1] = H1;
+    ctx->digest[2] = H2;
+    ctx->digest[3] = H3;
+    ctx->digest[4] = H4;
 
     for (chunk_index = 0; chunk_index < ctx->num_of_chunks; chunk_index++) {
 
         for (word_index = 0; word_index < WORDS_IN_CHUNK; word_index++)
             w[word_index] = ctx->chunks[chunk_index].words[word_index];
 
-        for (; word_index < 80; word_index++)
-            w[word_index] = ps_rotate_left(w[word_index - 3] ^ w[word_index - 8] ^ w[word_index - 14] ^ w[word_index - 16],1);
-
-        a = h0;
-        b = h1;
-        c = h2;
-        d = h3;
-        e = h4;
+        a = ctx->digest[0];
+        b = ctx->digest[1];
+        c = ctx->digest[2];
+        d = ctx->digest[3];
+        e = ctx->digest[4];
 
         /*
          * Main loop:
@@ -317,6 +314,15 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
          */
 
         for (word_index = 0; word_index < 80; word_index++) {
+
+            word_index_mod_16 = word_index & MASK;
+
+            if(word_index > MASK) {
+                w[word_index_mod_16] = ps_rotate_left(
+                        w[(word_index_mod_16 + 13) & MASK] ^ w[(word_index_mod_16 + 8) & MASK] ^
+                        w[(word_index_mod_16 + 2) & MASK] ^ w[word_index_mod_16], 1);
+            }
+
             if (word_index < 20) {
                 f = ((b & c) ^ ((~b) & d));
                 k = 0x5A827999;
@@ -340,7 +346,7 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
                 *  a = temp
                 */
 
-            temp = ps_rotate_left(a, 5) + e + k + f + w[word_index];
+            temp = ps_rotate_left(a, 5) + e + k + f + w[word_index_mod_16];
 
             e = d;
             d = c;
@@ -358,16 +364,10 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
          * h4 = h4 + e
          */
 
-        h0 = h0 + a;
-        h1 = h1 + b;
-        h2 = h2 + c;
-        h3 = h3 + d;
-        h4 = h4 + e;
+        ctx->digest[0] = ctx->digest[0] + a;
+        ctx->digest[1] = ctx->digest[1] + b;
+        ctx->digest[2] = ctx->digest[2] + c;
+        ctx->digest[3] = ctx->digest[3] + d;
+        ctx->digest[4] = ctx->digest[4] + e;
     }
-
-    ctx->digest[0] = h0;
-    ctx->digest[1] = h1;
-    ctx->digest[2] = h2;
-    ctx->digest[3] = h3;
-    ctx->digest[4] = h4;
 }
