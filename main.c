@@ -309,8 +309,6 @@ int main(int argc, char **argv) {
             ctx.strlen_password = strlen_password;
             ctx.strlen_salt = strlen_salt;
 
-            pbkdf2_ctx_init(&ctx);
-
             pbkdf2(&ctx);
 
             /* Printing Pairwise Master Key, calculated via pbkdf2 */

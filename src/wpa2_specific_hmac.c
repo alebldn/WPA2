@@ -490,39 +490,3 @@ void ws_hmac(wpa2_specific_hmac_ctx_t *ctx) {
     ctx->digest[3] = ctx->sha1_ctx_text.digest[3];
     ctx->digest[4] = ctx->sha1_ctx_text.digest[4];
 }
-
-/** Example Main
- *
- * hmac_sha1("Key", "Text");
- * └- HMAC -→ 9b31ae2e c98fb87c ee39f48b 38b4b0ea 6151e02b
- *
- * hmac_sha1("key", "The quick brown fox jumps over the lazy dog");
- * └- HMAC -→ de7c9b85 b8b78aa6 bc8a7a36 f70a9070 1c9db4d9
- *
- * hmac_sha1("ciao", "The quick brown fox jumps over the lazy dog");
- * └- HMAC -→ 4845858e 85c82bd1 b01478eb 358d11b5 38647268
- *
- */
-/*
-int main()
-{
-    uint32_t i;
-    char key[] = "ciao";
-    char text[] = "The quick brown fox jumps over the lazy dog";
-    wpa2_specific_hmac_ctx_t ctx;
-
-    hmac_ctx_init(&ctx, strlen(key) * 8, strlen(text) * 8);
-
-    for(i = 0; i < strlen(key); i++)
-        hmac_append_char_key(&ctx, key[i]);
-
-    for(i = 0; i < strlen(text); i++)
-        hmac_append_char_text(&ctx, text[i]);
-
-    hmac(&ctx);
-
-    hmac_ctx_dispose(&ctx);
-
-    printf("Digest: %08x %08x %08x %08x %08x\n", ctx.digest[0], ctx.digest[1], ctx.digest[2], ctx.digest[3], ctx.digest[4]);
-}
-*/

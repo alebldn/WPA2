@@ -56,10 +56,6 @@ typedef struct {
 } pbkdf2_ctx_t;
 
 /** Function declarations */
-void pbkdf2_ctx_init(pbkdf2_ctx_t *ctx);
-
 void pbkdf2(pbkdf2_ctx_t *ctx);
-
-void pbkdf2_ctx_dispose(pbkdf2_ctx_t *ctx);
 
 #endif /* PBKDF2_H */

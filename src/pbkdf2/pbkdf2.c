@@ -1,26 +1,5 @@
 #include "pbkdf2.h"
 
-
-/**                         pbkdf2_ctx_init(pbkdf2_ctx_t*);
- *
- *  Requires:               [Variables: ctx->password, ctx->salt, ctx->strlen_salt, ctx->strlen_password,
- *                          ctx->iteration_count set.]
- *
- *  Allows:                 - pbkdf2(pbkdf2_ctx_t*);
- *                          - pbkdf2_ctx_dispose(pbkdf2_ctx_t*);
- *
- *  Description:            Utility function that has to be called once password, salt, strlen_salt, strlen_password and
- *                          iteration_count are defined, in order to initialize the underlying hmac_sha1_key and text
- *                          contexts with the correct amount of bits needed for the pbkdf2 algorithm.
- *
- * @param ctx:              pbkdf2_ctx_t struct containing the hmac_context, whose password, salt, strlen_salt, strlen_password
- *                          and iteration_count values have already been set.
- */
-void pbkdf2_ctx_init(pbkdf2_ctx_t *ctx) {
-    ps_hmac_ctx_init(&ctx->hmac_ctx, ctx->strlen_password * 8, ctx->strlen_salt * 8 + 32 + BITS_IN_CHUNK);
-}
-
-
 /**                         pbkdf2(pbkdf2_ctx_t*);
  *
  *  Requires:               - pbkdf2_ctx_init(pbkdf2_ctx_t *ctx);
@@ -123,43 +102,4 @@ Input:
         S =         salt
         c =         16777216
         Output =    eefe3d61 cd4da4e4 e9945b3d 6ba2158c 2634e984
-*/
-
-/* Example Main
-int main(int argc, char** argv)
-{
-    char salt[MAX_LENGTH] = "salt";
-    char password[MAX_LENGTH] = "password";
-
-    uint32_t strlen_password, strlen_salt;
-    uint32_t iteration_count = 4096;
-    pbkdf2_ctx_t ctx;
-
-    strlen_password = strlen(password);
-    strlen_salt = strlen(salt);
-
-    ctx.strlen_password = strlen_password;
-    ctx.strlen_salt = strlen_salt;
-    ctx.iteration_count = iteration_count;
-    ctx.bits_in_result_hash = 256;
-
-    strncpy((char*) ctx.password, password, ctx.strlen_password);
-    strncpy((char*) ctx.salt, salt, ctx.strlen_salt);
-
-    pbkdf2_ctx_init(&ctx);
-
-    hmac_append_str_text(&ctx.hmac_ctx, ctx.salt, ctx.strlen_salt);
-    hmac_append_str_key(&ctx.hmac_ctx, ctx.password, ctx.strlen_password);
-
-    pbkdf2(&ctx);
-
-    for(int i = 0; i < ctx.bits_in_result_hash / BITS_IN_WORD; i++)
-    {
-        printf("%08x ", ctx.T[i]);
-    }
-    printf("\n");
-
-    pbkdf2_ctx_dispose(&ctx);
-
-}
 */
