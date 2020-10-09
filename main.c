@@ -267,8 +267,6 @@ bit_t verify_mic(wpa2_specific_hmac_ctx_t *hmac_ctx, hccapx_t *hccapx) {
     return true;
 }
 
-/* TODO: mega optimize sha1 */
-
 /** Main Function           ./wpa2 <cap_file> <wordlist_file> [Essid Filter] */
 int main(int argc, char **argv) {
 

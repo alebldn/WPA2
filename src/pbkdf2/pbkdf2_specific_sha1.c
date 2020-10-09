@@ -128,8 +128,6 @@ void ps_sha1_append_long(pbkdf2_specific_sha1_ctx_t *ctx, uint64_t value) {
  */
  /** TODO: Delete if check */
 uint32_t ps_rotate_left(const uint32_t value, uint32_t shift) {
-    if ((shift &= 31) == 0)
-        return value;
     return (value << shift) | (value >> (32 - shift));
 }
 
@@ -149,9 +147,7 @@ uint32_t ps_rotate_left(const uint32_t value, uint32_t shift) {
  *  @return:                rotated uint32_t word.
  */
 uint32_t ps_rotate_right(const uint32_t value, uint32_t shift) {
-    if ((shift &= sizeof(value) * 8 - 1) == 0)
-        return value;
-    return (value >> shift) | (value << (sizeof(value) * 8 - shift));
+    return (value >> shift) | (value << (32 - shift));
 }
 
 
@@ -168,10 +164,10 @@ uint32_t ps_rotate_right(const uint32_t value, uint32_t shift) {
  *                          amount of zeroes that need to be appended in order to pad the last chunk
  */
 void ps_sha1_pad(pbkdf2_specific_sha1_ctx_t *ctx) {
-    uint64_t cap = BITS_IN_CHUNK * (ctx->num_of_chunks - ctx->chunk_counter) -
+    uint16_t cap = BITS_IN_CHUNK * (ctx->num_of_chunks - ctx->chunk_counter) -
                    ctx->word_counter * BITS_IN_WORD - BITS_IN_WORD + ctx->counter - 64;
 
-    for (uint64_t i = 0; i < cap; i++) {
+    for (uint16_t i = 0; i < cap; i++) {
         ps_sha1_append_bit(ctx, 0);
     }
 }
