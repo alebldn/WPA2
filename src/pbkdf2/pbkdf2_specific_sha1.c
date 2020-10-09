@@ -126,7 +126,6 @@ void ps_sha1_append_long(pbkdf2_specific_sha1_ctx_t *ctx, uint64_t value) {
  *  @param shift:           value of the rotation (max should be 31 bit).
  *  @return:                rotated uint32_t word.
  */
- /** TODO: Delete if check */
 uint32_t ps_rotate_left(const uint32_t value, uint32_t shift) {
     return (value << shift) | (value >> (32 - shift));
 }
@@ -228,8 +227,7 @@ void ps_sha1_ctx_init(pbkdf2_specific_sha1_ctx_t *ctx, uint8_t num_of_chunks) {
     ctx->chunks[0].words[14] = 0;
     ctx->chunks[0].words[15] = 0;
 
-    if(ctx->num_of_chunks == 2)
-    {
+    if (ctx->num_of_chunks == 2) {
         ctx->chunks[1].words[0] = 0;
         ctx->chunks[1].words[1] = 0;
         ctx->chunks[1].words[2] = 0;
@@ -362,7 +360,7 @@ void ps_sha1(pbkdf2_specific_sha1_ctx_t *ctx) {
 
             word_index_mod_16 = word_index & MASK;
 
-            if(word_index > MASK) {
+            if (word_index > MASK) {
                 w[word_index_mod_16] = ps_rotate_left(
                         w[(word_index_mod_16 + 13) & MASK] ^ w[(word_index_mod_16 + 8) & MASK] ^
                         w[(word_index_mod_16 + 2) & MASK] ^ w[word_index_mod_16], 1);

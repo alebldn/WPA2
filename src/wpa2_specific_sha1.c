@@ -211,8 +211,7 @@ void ws_sha1_ctx_init(wpa2_specific_sha1_ctx_t *ctx, uint8_t num_of_chunks) {
 
     ctx->num_of_chunks = num_of_chunks;
 
-    for (i = 0; i < ctx->num_of_chunks; i++)
-    {
+    for (i = 0; i < ctx->num_of_chunks; i++) {
 
         ctx->chunks[i].words[0] = 0;
         ctx->chunks[i].words[1] = 0;
@@ -347,7 +346,7 @@ void ws_sha1(wpa2_specific_sha1_ctx_t *ctx) {
 
             word_index_mod_16 = word_index & MASK;
 
-            if(word_index > MASK) {
+            if (word_index > MASK) {
                 w[word_index_mod_16] = ws_rotate_left(
                         w[(word_index_mod_16 + 13) & MASK] ^ w[(word_index_mod_16 + 8) & MASK] ^
                         w[(word_index_mod_16 + 2) & MASK] ^ w[word_index_mod_16], 1);
