@@ -284,6 +284,54 @@ int main(int argc, char **argv) {
 
     hccapx = process_cap_file(argc, argv);
 
+    int i;
+
+    printf("char mic[] = {");
+    printf("0x%02x", hccapx.keymic[0]);
+    for(int i = 1; i < 16; i++) {
+        printf(", 0x%02x", hccapx.keymic[i]);
+    }
+    printf("};\n\n");
+
+    printf("char mac_sta[] = {");
+    printf("0x%02x", hccapx.mac_sta[0]);
+    for(int i = 1; i < 6; i++) {
+        printf(", 0x%02x", hccapx.mac_sta[i]);
+    }
+    printf("};\n\n");
+
+    printf("char mac_ap[] = {");
+    printf("0x%02x", hccapx.mac_ap[0]);
+    for(int i = 1; i < 6; i++) {
+        printf(", 0x%02x", hccapx.mac_ap[i]);
+    }
+    printf("};\n\n");
+
+    printf("char nonce_sta[] = {");
+    printf("0x%02x", hccapx.nonce_sta[0]);
+    for(int i = 1; i < 32; i++) {
+        printf(", 0x%02x", hccapx.nonce_sta[i]);
+    }
+    printf("};\n\n");
+
+    printf("char nonce_ap[] = {");
+    printf("0x%02x", hccapx.nonce_ap[0]);
+    for(int i = 1; i < 32; i++) {
+        printf(", 0x%02x", hccapx.nonce_ap[i]);
+    }
+    printf("};\n\n");
+
+    printf("short eapol_len = %u;\n", hccapx.eapol_len);
+    printf("char eapol[] = {");
+    printf("0x%02x", hccapx.eapol[0]);
+    for(int i = 1; i < 256; i++) {
+        printf(", 0x%02x", hccapx.eapol[i]);
+    }
+    printf("};\n\n");
+
+    printf("char essid_len = %u;\n", hccapx.essid_len);
+    printf("char essid[] = \"%s\";\n", hccapx.essid);
+
     wordlist = fopen(argv[2], "r");
     if (wordlist) {
 
@@ -312,10 +360,9 @@ int main(int argc, char **argv) {
             pbkdf2(&ctx);
 
             /* Printing Pairwise Master Key, calculated via pbkdf2 */
-
-//            printf("+---------------------------------- PMK ----------------------------------+\n");
-//            printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.T[0], ctx.T[1], ctx.T[2], ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
-//            printf("+-------------------------------------------------------------------------+\n");
+            printf("+---------------------------------- PMK ----------------------------------+\n");
+            printf("| %08x %08x %08x %08x %08x %08x %08x %08x |\n", ctx.T[0], ctx.T[1], ctx.T[2], ctx.T[3], ctx.T[4], ctx.T[5], ctx.T[6], ctx.T[7]);
+            printf("+-------------------------------------------------------------------------+\n");
 
             /*
              * Inside the WPA2 protocol is mandatory to write, in the following order:
@@ -350,12 +397,10 @@ int main(int argc, char **argv) {
 
             /* Printing Key Confirmation Key, calculated truncating the Pairwise Transient Key, calculated via hmac_sha1
             using the protocol defined above. */
-//
-//            printf("+---------------------------------- KCK ----------------------------------+\n");
-//            printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
-//            printf("+-------------------------------------------------------------------------+\n");
 
-
+            printf("+---------------------------------- KCK ----------------------------------+\n");
+            printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+            printf("+-------------------------------------------------------------------------+\n");
 
             ws_hmac_ctx_init(&hmac_ctx, 128, hccapx.eapol_len * 8);
 
@@ -369,10 +414,10 @@ int main(int argc, char **argv) {
             ws_hmac(&hmac_ctx);
 
             /* Printing Message Integrity Code, calculated via hmac_sha1, processing the whole eapol message using KCK as Key */
-//
-//            printf("+---------------------------------- MIC ----------------------------------+\n");
-//            printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
-//            printf("+-------------------------------------------------------------------------+\n");
+
+            printf("+---------------------------------- MIC ----------------------------------+\n");
+            printf("| %08x %08x %08x %08x %35s |\n", hmac_ctx.digest[0], hmac_ctx.digest[1], hmac_ctx.digest[2], hmac_ctx.digest[3], " ");
+            printf("+-------------------------------------------------------------------------+\n");
 
             if (verify_mic(&hmac_ctx, &hccapx)) {
                 printf("Password found: \"%s\"\n", password);
